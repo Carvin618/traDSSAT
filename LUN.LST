@@ -1,0 +1,11 @@
+*Summary of files opened during simulation
+
+Unit  File
+Num.  Variable Name
+*DSSAT Cropping System Model Ver. 4.8.0.028   -develop    SEP 22, 2022; 09:13:36
+
+ Unit  Filename
+  501  WARNING.OUT
+  502  OUTWARN
+   21  FILEIO
+  503  ERRORO

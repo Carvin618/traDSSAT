@@ -2,7 +2,7 @@ from tradssat.tmpl.var import CharacterVar, FloatVar, IntegerVar
 
 cul_vars_CSCAS = {
     CharacterVar('VAR#', 6, spc=0, info='Identification code or number for the specific cultivar.'),
-    CharacterVar('VAR-NAME', 16, header_fill='.', info='Name of cultivar.'),
+    CharacterVar('VAR-NAME', 16, fill='.', info='Name of cultivar.', right_align=False),
     CharacterVar('EXP#', 5, miss='.', info='Number of experiments used for calibration.'),
     CharacterVar('ECO#', 6, info='Ecotype code for this cultivar,points to entry in the ECO file'),
 
@@ -34,7 +34,7 @@ cul_vars_CSCAS = {
 
 eco_vars_CSCAS = {
     CharacterVar('ECO#', 6, spc=0, info='Code for the ecotype to which a cultivar belongs (see *.cul file)'),
-    CharacterVar('ECONAME', 17, header_fill='.', info='Name of the ecotype, which is referenced from *.CUL file'),
+    CharacterVar('ECONAME', 17, fill='.', info='Name of the ecotype, which is referenced from *.CUL file'),
 
     FloatVar('BR1FX', 5, 0, info='Branch number per fork at fork 1, maximum (#)'),
     FloatVar('BR2FX', 5, 0, info='Branch number per fork at fork 2, maximum (#)'),

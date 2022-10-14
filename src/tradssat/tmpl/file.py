@@ -1,11 +1,10 @@
-import os
-import re
-
 import numpy as np
+import fortranformat as ff
 
 from tradssat.utils import detect_encod
 from .vals import FileValueSet, ValueSubSection
 from .var import VariableSet, CODE_MISS
+from tradssat.format.utils import get_line_fmt
 
 
 class File(object):
@@ -123,16 +122,18 @@ class File(object):
 
     def _read_subsection(self, section_name, subblock):
 
-        var_names = self._get_var_names(subblock[0])
+        var_fmt, val_fmt = get_line_fmt(subblock[0])
+        l_reader = ff.FortranRecordReader(val_fmt)
+
+        var_names = self._get_var_names(subblock[0], var_fmt)
+
+        # There are ['NFOR', 'PLTF', 'NDOF', 'PMTY'] 4 variables don't in the PLANTING DETAILS section.
+        # But these variables are parsed by the model.
+        if section_name == 'PLANTING DETAILS':
+            for vr in ['NFOR', 'PLTF', 'NDOF', 'PMTY']:
+                var_names.insert(-1, vr)
 
         n_lines = len(subblock) - 1  # -1 for the header line (with "@" )
-        lengths = [self.get_var_size(vr) for vr in var_names]
-
-        spaces = [self.get_var_spc(var = vr,
-                                   header = subblock[0]) for vr in var_names]
-
-        cum_lens = np.insert(np.cumsum(lengths) + np.cumsum(spaces), 0, 0)
-        cutoffs = [(cum_lens[i], cum_lens[i + 1]) for i in range(len(var_names))]
 
         d_vals = {vr: self._gen_empty_mtrx(vr, n_lines) for vr in var_names}
 
@@ -140,18 +141,24 @@ class File(object):
             # Odd workaround necessary because several cultivar names in DSSAT are larger than the allowed space
             # and so run into the next column, which apparently isn't supposed to matter if the next column's value
             # is small enough to allow both to fit. (Really?!)
-            vals = [
-                (l[0 if c[0] == 0 else max(c[0], l.find(' ', c[0], c[1] - 1)):
-                   None if l.find(' ', c[1] - 1) < 0 else l.find(' ', c[1] - 1)]).strip()
-                for c in cutoffs]
+
+            # vals = [
+            #     (l[0 if c[0] == 0 else max(c[0], l.find(' ', c[0], c[1] - 1)):
+            #        None if l.find(' ', c[1] - 1) < 0 else l.find(' ', c[1] - 1)]).strip()
+            #     for c in cutoffs]
+            vals = l_reader.read(l)
             for vr, vl in zip(var_names, vals):
-                if not vl:
+                if vl is None or vl == ' ':
                     vl = self.get_var_code_miss(vr)
+                if type(vl) == str:
+                    vl = vl.strip(' .\t\n')
+
                 d_vals[vr][i] = vl
 
         l_vars = [self._var_info.get_var(vr, sect=section_name) for vr in var_names]
         l_vals = [d_vals[vr] for vr in var_names]
-        subsect = ValueSubSection(l_vars, l_vals)
+
+        subsect = ValueSubSection(l_vars, l_vals, fmt=get_line_fmt(subblock[0]))
 
         self._values[section_name].add_subsection(subsect)
 
@@ -187,29 +194,35 @@ class File(object):
 
         return np.full(size, CODE_MISS, dtype=dtype)
 
-    def _get_var_names(self, line):
+    def _get_var_names(self, line, var_fmt):
+        reader = ff.FortranRecordReader(var_fmt)
+
         var_names = [str(vr) for vr in self._var_info]
         var_names.sort(key=len, reverse=True)
 
-        def _strip(txt):
-            return re.sub('^[|.\W]+', '', txt)
+        vars_in_line = [vr.strip('@ .\t\n') for vr in reader.read(line)]             # Skip initial "@" and remove " ".
 
-        final_names = []
-        line = _strip(line[1:])  # skip initial "@"
+        return [var for var in vars_in_line if var in var_names]
 
-        while line:
-            try:
-                name = next(vr for vr in var_names if line.startswith(vr))
-            except StopIteration:
-                raise ValueError(
-                    'No variable matching "{line}" for file {nm}.'.format(
-                        line=line[:20], nm=os.path.split(self.file)[1]
-                    )
-                )
-            final_names.append(name)
-            line = _strip(line[len(name):])
-
-        return final_names
+        # def _strip(txt):
+        #     return re.sub('^[|.\W]+', '', txt)
+        #
+        # final_names = []
+        # line = _strip(line[1:])  # skip initial "@"
+        #
+        # while line:
+        #     try:
+        #         name = next(vr for vr in var_names if line.startswith(vr))
+        #     except StopIteration:
+        #         raise ValueError(
+        #             'No variable matching "{line}" for file {nm}.'.format(
+        #                 line=line[:20], nm=os.path.split(self.file)[1]
+        #             )
+        #         )
+        #     final_names.append(name)
+        #     line = _strip(line[len(name):])
+        #
+        # return final_names
 
     def __contains__(self, item):
         return item in self._values

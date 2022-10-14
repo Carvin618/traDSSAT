@@ -2,7 +2,7 @@ from tradssat.tmpl.var import CharacterVar, FloatVar
 
 cul_vars_PTSUB = {
     CharacterVar('VAR#', 6, spc=0, info='Identification code or number for the specific cultivar.'),
-    CharacterVar('VAR-NAME', 16, header_fill='.', info='Name of cultivar.'),
+    CharacterVar('VAR-NAME', 16, fill='.', info='Name of cultivar.'),
     CharacterVar('EXPNO', 5, miss='.', info='Number of experiments used for calibration.'),
     CharacterVar(
         'ECO#', 6, info='Ecotype code or this cultivar, points to the Ecotype in the ECO file (currently not used).'
@@ -19,7 +19,7 @@ cul_vars_PTSUB = {
 
 eco_vars_PTSUB = {
     CharacterVar('ECO#', 6, spc=0, info='Code for the ecotype to which a cultivar belongs (see *.cul file)'),
-    CharacterVar('ECONAME', 18, header_fill='.', info='Name of the ecotype, which is referenced from *.CUL file'),
+    CharacterVar('ECONAME', 18, fill='.', info='Name of the ecotype, which is referenced from *.CUL file'),
 
     FloatVar('RUE1', 5, 1, info='Radiation use efficiency, ISTAGE=1, g plant dry matter/MJ PAR'),
     FloatVar('RUE2', 5, 1, info='Radiation use efficiency, ISTAGE>1, g plant dry matter/MJ PAR')

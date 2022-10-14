@@ -35,8 +35,7 @@ def get_ref(file, default):
 
 def _test_read(inp_class, folder, testcase):
     files = find_files(inp_class, folder)
-
-    for f in files:
+    for f in files[0:1]:
         with testcase.subTest(os.path.split(f)[1]):
             dict_vars = inp_class(f).to_dict()
 

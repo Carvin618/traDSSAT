@@ -5,9 +5,9 @@ import unittest
 
 import numpy.testing as npt
 
-from tradssat import DSSATRun, DSSATResults, set_dssat_dir, ExpFile
-from tradssat.exper.exper_vars import TRT_HEAD
-from tradssat.out import PlantGroOut
+from src.tradssat import DSSATRun, DSSATResults, set_dssat_dir, ExpFile
+from src.tradssat.exper.exper_vars import TRT_HEAD
+from src.tradssat.out import PlantGroOut
 
 from tests.utils import rsrcs
 

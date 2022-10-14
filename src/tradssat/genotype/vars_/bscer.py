@@ -2,7 +2,7 @@ from tradssat.tmpl.var import CharacterVar, FloatVar
 
 cul_vars_BSCER = {
     CharacterVar('VAR#', 6, spc=0, info='Identification code or number for the specific cultivar.'),
-    CharacterVar('VRNAME', 16, header_fill='.', info='Name of cultivar.'),
+    CharacterVar('VRNAME', 16, fill='.', info='Name of cultivar.', right_align=False),
     CharacterVar('EXPNO', 5, miss='.', info='Number of experiments used for calibration.'),
     CharacterVar('ECO#', 6, info='Code for the ecotype to which this cultivar belongs (see *.eco file)'),
 
@@ -35,7 +35,8 @@ cul_vars_BSCER = {
 
 eco_vars_BSCER = {
     CharacterVar('ECO#', 6, spc=0, info='Code for the ecotype to which a cultivar belongs (see *.cul file)'),
-    CharacterVar('ECONAME', 17, header_fill='.', info='Name of the ecotype, which is referenced from *.CUL file'),
+    CharacterVar('ECONAME', 17, fill='.', info='Name of the ecotype, which is referenced from *.CUL file',
+                 right_align=False),
 
     FloatVar('TBASE', 5, 1, info='Base temperature below which no development occurs, C'),
     FloatVar('TOPT', 5, 1, info='Temperature at which maximum development rate occurs during vegetative stages, C'),

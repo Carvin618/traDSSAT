@@ -21,5 +21,4 @@ vars_ = {
     FloatVar('PAR', 5, 1, info='Photosynthetic active radiation (PAR)5, moles m-2 day-1'),
     FloatVar('EVAP', 5, 1),
     FloatVar('RHUM', 5, 1)
-
 }

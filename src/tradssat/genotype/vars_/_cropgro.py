@@ -6,7 +6,7 @@ _standard_cul_vars = {
         'class': CharacterVar,
         'args': dict(size=6, spc=0, info='Identification code or number for the specific cultivar.')
     },
-    'VRNAME': {'class': CharacterVar, 'args': dict(size=16, header_fill='.', info='Name of cultivar.')},
+    'VRNAME': {'class': CharacterVar, 'args': dict(size=16, fill='.', info='Name of cultivar.', right_align=False)},
     'EXPNO': {
         'class': CharacterVar, 'args': dict(size=5, miss='.', info='Number of experiments used for calibration.')
     },  # Yes, I know. Number of experiments is a character var.
@@ -79,8 +79,9 @@ _standard_eco_vars = {
              },
     'ECONAME': {'class': CharacterVar,
 
-                'args': dict(size=17, header_fill='.',
-                             info='Name of the ecotype, which is referenced from *.CUL file')},
+                'args': dict(size=17, fill='.',
+                             info='Name of the ecotype, which is referenced from *.CUL file',
+                             right_align=False)},
     'MG': {'class': CharacterVar,
            'args': dict(size=2, info='Maturity group number for this ecotype, such as maturity group in soybean')},
     'TM': {'class': CharacterVar, 'args': dict(size=2, info='Indicator of temperature adaptation')},

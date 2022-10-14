@@ -1,0 +1,10 @@
+
+ OUTFLE  YEAR DOY =    0   0
+ OUTPUT.CDE file not found                                                     
+ Error in subroutine OUTFILES                                                  
+
+ PATH    YEAR DOY =    0   0
+ Could not locate error file:                                        MODEL.ERR 
+ Unknown ERROR. Error number:     2                                            
+ File: /DSSAT48/DSS   Line:     0 Error key: PATH                              
+ Simulations terminated.                                                       

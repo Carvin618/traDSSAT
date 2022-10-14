@@ -4,6 +4,8 @@ from .file import File
 from .vals import ValueSubSection
 from .var import HeaderVariableSet
 
+from tradssat.format.utils import get_section_fmt
+
 
 class InpFile(File):
     """
@@ -50,7 +52,7 @@ class InpFile(File):
     def _process_section_header(self, lines):
 
         if lines[0][0] == '@':  # In case a section header is missing
-            self._values.add_section('')
+            self._values.add_section('', sect_fmt = get_section_fmt(''))
             return '', lines
 
         header_text = lines[0][1:].strip()  # Skip initial "*"
@@ -59,7 +61,7 @@ class InpFile(File):
         if match:
 
             section_name = match.strip()
-            self._values.add_section(section_name)
+            self._values.add_section(section_name, get_section_fmt(section_name))
             header_text = header_text[len(match):]
 
             h_vars = self._header_vars.get_vars(match)
@@ -81,7 +83,7 @@ class InpFile(File):
 
             return match, lines[1:]
 
-        self._values.add_section(header_text)
+        self._values.add_section(header_text, get_section_fmt(header_text))
         return header_text, lines[1:]
 
     def _get_header_vars(self):

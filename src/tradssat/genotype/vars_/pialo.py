@@ -2,7 +2,7 @@ from tradssat.tmpl.var import FloatVar, CharacterVar
 
 cul_vars_PIALO = {
     CharacterVar('VAR#', 6, spc=0, info=''),
-    CharacterVar('VAR-NAME', 16, header_fill='.', info=''),
+    CharacterVar('VAR-NAME', 16, fill='.', info='', right_align=False),
     CharacterVar('EXPNO', 5, miss='', info=''),
     CharacterVar('ECO#', 6, info=''),
 

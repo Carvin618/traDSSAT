@@ -1,6 +1,7 @@
 import re
 
 import numpy as np
+import fortranformat as ff
 
 
 class FileValueSet(object):
@@ -11,7 +12,7 @@ class FileValueSet(object):
     def __init__(self):
         self._sections = {}
 
-    def add_section(self, name):
+    def add_section(self, name, fmt):
         """
         Adds a section to the file.
         
@@ -21,7 +22,7 @@ class FileValueSet(object):
             Name of the new section.
 
         """
-        self._sections[name] = ValueSection(name)
+        self._sections[name] = ValueSection(name, fmt)
 
     def write(self, lines):
         """
@@ -141,7 +142,7 @@ class ValueSection(object):
     Represents the structure and variable values in a DSSAT file section.
     """
 
-    def __init__(self, name):
+    def __init__(self, name, fmt):
         """
 
         Parameters
@@ -152,7 +153,7 @@ class ValueSection(object):
 
         self.name = name
         self._subsections = []
-        self._header_vars = HeaderValues()
+        self._header_vars = HeaderValues(fmt=fmt)
 
     def add_subsection(self, subsect):
         """
@@ -309,9 +310,16 @@ class ValueSubSection(object):
     Represents the variables and values in a DSSAT file subsection.
     """
 
-    def __init__(self, l_vars, l_vals):
-
+    def __init__(self, l_vars, l_vals, fmt=None):
         self._vars = {str(vr): VariableValue(vr, vl) for vr, vl in zip(l_vars, l_vals)}
+
+        if fmt:
+            self.var_fmt = fmt[0]  # variable name format expression for a line
+            self.val_fmt = fmt[1]  # variable value format expression for a line
+        else:
+            # '0' is expression to read and write empty string.
+            self.var_fmt = '0'
+            self.val_fmt = '0'
 
     def set_value(self, var, val, cond=None):
         filter_ = self.filter_cond(cond)
@@ -389,18 +397,31 @@ class ValueSubSection(object):
             The list of lines to which to append this subsection.
 
         """
+        # print(self._vars)
         self.check_dims()
         self.check_vals()
 
-        lines.append('@' + ''.join([vr.write() for vr in self]))
+        var_writer = ff.FortranRecordWriter(self.var_fmt)
+        val_writer = ff.FortranRecordWriter(self.val_fmt)
+        line = var_writer.write([vr.write() for vr in self])
+
+        # There is a space line at the end of each Automatic management subsection.
+        if line.startswith('   AUTOMATIC'):
+            lines.append('')
+
+        if line .startswith(' '):
+            lines.append(line.replace(' ', '@', 1))
+        else:
+            lines.append('@' + line)
+
         for i in range(self.n_data()):
             written = [vr.write(i) for vr in self]
-            for i, (x, vr) in enumerate(zip(list(written), self)):
-                extra = len(x) - (vr.var.size + vr.var.spc)
-                if i < len(written) - 1 and extra:
-                    written[i + 1] = written[i + 1][extra:]
+            # for i, (x, vr) in enumerate(zip(list(written), self)):
+            #     extra = len(x) - (vr.var.size + vr.var.spc)
+            #     if i < len(written) - 1 and extra:
+            #         written[i + 1] = written[i + 1][extra:]
 
-            line = ''.join(written)
+            line = val_writer.write(written)
             lines.append(line)
 
     def to_dict(self):
@@ -551,8 +572,9 @@ class HeaderValues(object):
     Represents DSSAT file header variables and their values.
     """
 
-    def __init__(self):
+    def __init__(self, fmt):
         self._subsect = None
+        self.fmt = fmt
 
     def set_vars(self, subsect):
         """
@@ -605,10 +627,11 @@ class HeaderValues(object):
         -------
         str
         """
+        writer = ff.FortranRecordWriter(self.fmt)
         if self._subsect is None:
             return ''
         else:
-            return ''.join([vr.write(0) for vr in self._subsect])
+            return writer.write([vr.write(0) for vr in self._subsect])
 
     def changed(self):
         """

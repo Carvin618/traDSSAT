@@ -11,30 +11,36 @@ class Variable(object):
     """
     type_ = None
 
-    def __init__(self, name, size, spc, header_fill, float_r, miss, sect, info):
+    def __init__(self, name, size, spc, float_r, miss, sect, info, fmt, hidden):
         self.name = name
         self.size = size
         self.spc = spc
 
-        self.fill = header_fill
         self.float_r = float_r
         self.miss = miss
 
         self.info = info
         self.sect = sect
 
+        self.fmt = fmt              # fmt is the fortran format output expression for variable value.
+        self.hidden = hidden
+
     def write(self, val=None):
-        fill = self.fill if val is None else ' '
+        # fill = self.fill if val is None else ' '
         if val is None:
-            txt = str(self)
+            if self.hidden:
+                txt = ''
+            else:
+                txt = self._write(self.name)
         else:
             if val == CODE_MISS:
                 val = self.miss
             txt = self._write(val)
 
-        if self.float_r:
-            return ' ' * self.spc + txt.ljust(self.size, fill)
-        return ' ' * self.spc + txt.rjust(self.size, fill)
+        # if self.float_r:
+        #     return ' ' * self.spc + txt.ljust(self.size, fill)
+
+        return txt
 
     def check_val(self, val):
         raise NotImplementedError
@@ -52,8 +58,13 @@ class CharacterVar(Variable):
     """
     type_ = str
 
-    def __init__(self, name, size, spc=1, sect=None, header_fill=' ', miss='-99', info=''):
-        super().__init__(name, size, spc, header_fill, float_r=False, miss=miss, sect=sect, info=info)
+    def __init__(self, name, size, spc=1, sect=None, fill=' ', miss='-99', info='', fmt='', right_align=True,
+                 hidden=False, default=''):
+
+        self.right_align = right_align
+        self.fill = fill
+        self.default = default
+        super().__init__(name, size, spc, float_r=False, miss=miss, sect=sect, info=info, fmt=fmt, hidden=hidden)
 
     def check_val(self, val):
         if isinstance(val, str):
@@ -65,7 +76,16 @@ class CharacterVar(Variable):
                 )
 
     def _write(self, val):
-        return val
+        # FortranFormat write strings right aligned and cannot modify.
+        # But some variables are left aligned. For these variables, it is needed to pad spaces
+        # at tail until matching the variable size.
+        if self.hidden:
+            return self.default
+
+        if self.right_align:
+            return val
+        else:
+            return val + (self.size - len(val)) * self.fill
 
 
 class NumericVar(Variable):
@@ -73,15 +93,16 @@ class NumericVar(Variable):
     Parent class for numeric variable types.
     """
 
-    def __init__(self, name, size, lims, spc, header_fill, miss, sect, info):
-
-        super().__init__(name, size, spc, header_fill, sect=sect, float_r=True, miss=miss, info=info)
+    def __init__(self, name, size, lims, spc, miss, sect, info, hidden, default, fmt=''):
+        super().__init__(name, size, spc, sect=sect, float_r=True, miss=miss, info=info, fmt=fmt, hidden=hidden)
 
         if lims is None:
             lims = (-np.inf, np.inf)
         lims = (-np.inf if lims[0] is None else lims[0], np.inf if lims[1] is None else lims[1])
 
         self.lims = lims
+
+        self.default = default
 
     def check_val(self, val):
         val = np.array(val)
@@ -102,27 +123,34 @@ class FloatVar(NumericVar):
     """
     type_ = float
 
-    def __init__(self, name, size, dec, lims=None, spc=1, sect=None, header_fill=' ', miss='-99', info=''):
-        super().__init__(name, size, lims, spc, header_fill, miss=miss, sect=sect, info=info)
+    def __init__(self, name, size, dec, lims=None, spc=1, sect=None, miss=-99, info='', fmt='',
+                 hidden=False, default=0):
+        super().__init__(name, size, lims, spc, miss=miss, sect=sect, info=info, fmt=fmt,
+                         hidden=hidden, default=default)
         self.dec = dec
 
     def _write(self, val):
+        if self.hidden:
+            return self.default
+
         if val == self.miss:
-            return '-99'  # to avoid size overflow on small-sized variables with decimals
+            # return '-99'  # to avoid size overflow on small-sized variables with decimals
+            return self.miss
         # todo: clean
-        txt_0 = str(val)
-        space_req = len(txt_0.split('.')[0]) + 1
-        if txt_0.startswith('0') or txt_0.startswith('-0'):
-            space_req -= 1
-
-        dec = min(self.dec, max(0, self.size - space_req))
-
-        txt = '{:{sz}.{dec}f}'.format(val, sz=self.size, dec=dec)
-        if txt[0] == '0':
-            txt = txt[1:]
-        elif txt[:2] == '-0':
-            txt = '-{}'.format(txt[2:])
-        return txt
+        # txt_0 = str(val)
+        # space_req = len(txt_0.split('.')[0]) + 1
+        # if txt_0.startswith('0') or txt_0.startswith('-0'):
+        #     space_req -= 1
+        #
+        # dec = min(self.dec, max(0, self.size - space_req))
+        #
+        # txt = '{:{sz}.{dec}f}'.format(val, sz=self.size, dec=dec)
+        # if txt[0] == '0':
+        #     txt = txt[1:]
+        # elif txt[:2] == '-0':
+        #     txt = '-{}'.format(txt[2:])
+        # return txt
+        return val
 
 
 class IntegerVar(NumericVar):
@@ -131,13 +159,20 @@ class IntegerVar(NumericVar):
     """
     type_ = int
 
-    def __init__(self, name, size, lims=None, spc=1, sect=None, header_fill=' ', miss='-99', info=''):
-        super().__init__(name, size, lims, spc, header_fill, miss=miss, sect=sect, info=info)
+    def __init__(self, name, size, lims=None, spc=1, sect=None, miss=-99, info='', fmt='', hidden=False, default=0):
+        super().__init__(name, size, lims, spc, miss=miss, sect=sect, info=info, fmt=fmt,
+                         hidden=hidden, default=default)
 
     def _write(self, val):
+        # if val == self.miss:
+        #     return '{:{sz}}'.format(val, sz=self.size)  # to avoid problems with non-numeric missing value codes
+        # return '{:{sz}d}'.format(val, sz=self.size)
+        if self.hidden:
+            return self.default
+
         if val == self.miss:
-            return '{:{sz}}'.format(val, sz=self.size)  # to avoid problems with non-numeric missing value codes
-        return '{:{sz}d}'.format(val, sz=self.size)
+            return self.miss
+        return val
 
 
 class VariableSet(object):

@@ -1,15 +1,22 @@
 # traDSSAT
 TraDSSAT is a library to easily read and write DSSAT input and output files.
 
+## Important:
+The new branch 'exp_rw_fix' only fix the issue of read and write FILEXs. Read other files would report errors. 
+
 ## Status
 [![Build Status](https://travis-ci.org/julienmalard/traDSSAT.svg?branch=master)](https://travis-ci.org/julienmalard/traDSSAT)
 [![codecov](https://codecov.io/gh/julienmalard/traDSSAT/branch/master/graph/badge.svg)](https://codecov.io/gh/julienmalard/traDSSAT)
 [![Documentation Status](https://readthedocs.org/projects/tradssat/badge/?version=latest)](https://tradssat.readthedocs.io/en/latest/?badge=latest)
 
 ## Installation
+Master branch: 
 `poetry add tradssat`
 or
 `pip install tradssat`
+
+Other branch: 
+`pip3 install git+https://github.com/Carvin618/traDSSAT.git@<branch name>`
 
 ## Full docs
 Read the full thing [here](https://tradssat.readthedocs.io/en/latest/).

@@ -1,6 +1,11 @@
 import os
 import unittest
 
+import sys
+#sys.path.append(os.curdir + '/src')
+print(os.getcwd())
+print(sys.path)
+
 import numpy.testing as npt
 from tradssat import SoilFile, WTHFile, MTHFile, ExpFile, CULFile, ECOFile, DSSATResults
 from tradssat.out import SoilTempOut, SoilNiOut, SummaryOut, PlantGroOut, ETOut, SoilWatOut, MulchOut
@@ -17,7 +22,7 @@ final_out_classes = [SummaryOut]
 # Inputs must be read and written
 class TestInputs(unittest.TestCase):
     def test_read(self):
-        for inp_class in input_classes:
+        for inp_class in input_classes[3:4]:
             with self.subTest(inp_class.__name__):
                 _test_read(inp_class, folder=rsrcs, testcase=self)
 

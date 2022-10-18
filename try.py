@@ -1,27 +1,40 @@
 import os
-from tradssat import ExpFile
+from tradssat import ExpFile, WTHFile, SoilFile
 import fortranformat as ff
 
 
-def test_expfile():
-    xfile = 'C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Maize\\IUAF9901.MZX'
-    exp = ExpFile(xfile)
-    var_methods = {
-        'var': exp.get_var,
-        'value': exp.get_value,
-        'var_spc': exp.get_var_spc,
-        'dims_var': exp.get_dims_val,
-        'var_size': exp.get_var_size,
-        'var_doce': exp.get_var_code_miss,
-        'var_lims': exp.get_var_lims,
-        'var_type': exp.get_var_type,
-    }
-    print("Get variable 'FAMN': ", exp.get_value('FAMN', sect='FERTILIZERS (INORGANIC)'))
-    print("Set variable 'FAMN': ", exp.set_value('FAMN', 100, cond={'F': 1}))
-    # for func in var_methods.values():
-    #     print(func.__name__, func(var='CU'))
-    exp.write('IUAF9901.MZX')
+# def test_expfile():
+#     xfile = 'C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Maize\\IUAF9901.MZX'
+#     exp = ExpFile(xfile)
+#     var_methods = {
+#         'var': exp.get_var,
+#         'value': exp.get_value,
+#         'var_spc': exp.get_var_spc,
+#         'dims_var': exp.get_dims_val,
+#         'var_size': exp.get_var_size,
+#         'var_doce': exp.get_var_code_miss,
+#         'var_lims': exp.get_var_lims,
+#         'var_type': exp.get_var_type,
+#     }
+#     # print("Get variable 'FAMN': ", exp.get_value('FAMN', sect='FERTILIZERS (INORGANIC)'))
+#     # print("Set variable 'FAMN': ", exp.set_value('FAMN', 100, cond={'F': 1}))
+#     # for func in var_methods.values():
+#     #     print(func.__name__, func(var='CU'))
+#     exp.write('IUAF9901.MZX')
 
+
+# def test_wthfile():
+#     wfile = "C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Weather\\IUAF9901.WTH"
+#     wth = WTHFile(wfile)
+#
+#     wth.write('IUAF9901.WTH')
+
+
+def test_soilfile():
+    sfile = "C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Soil\\SOIL.SOL"
+    sol = SoilFile(sfile)
+
+    sol.write('SOIL.SOL')
 
 # def check_weather():
 #     weather_dir = 'C:/Users/57block/workspace/dssat/data/dssat-csm-data/Weather'
@@ -58,6 +71,8 @@ def test_expfile():
 
 
 if __name__ == '__main__':
-    test_expfile()
+    # test_expfile()
+    # test_wthfile()
+    test_soilfile()
     # check_weather()
     # fortran_format()

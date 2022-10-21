@@ -15,6 +15,12 @@ SITE_V = 'A5'
 SITE_L = 'A76'
 NOTES_V = 'A6'
 NOTES_L = 'A76'
+PLOT_INFO_V = '1X,A6,8(1X,A5),2X,A15'
+
+# Because the value of Plot Information variables are not match to the variable format definition.
+# Here we read & write these varibales as strings.
+PLOT_INFO_L = '1X,A6,8(1X,A5),2X,A15'
+# PLOT_INFO_L = '1X,F6.1,1X,I5,1X,F5.1,2(1X,I5),1X,C5,1X,F5.1,2(1X,I5),1X,A15'
 TREATMENTS_S = 'A74'
 TREATMENTS_L = 'I2,I2,2(1X,I1),1X,A25,13I3'
 TREATMENTS_V = 'A2,3(1X,A1),1X,A25,13A3'

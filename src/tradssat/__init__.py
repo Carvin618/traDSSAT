@@ -8,6 +8,7 @@ from .soil import SoilFile
 from .weather import WTHFile, MTHFile, CLIFile
 from .mgrs import DSSATRun, DSSATResults, GeneticMgr, WeatherFileMgr, SoilMgr
 from .format import get_line_fmt, get_section_fmt
+# from error import *
 
 try:
     set_dssat_dir('C:/DSSAT47')

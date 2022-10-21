@@ -3,8 +3,8 @@ import os
 from .file import File
 from .vals import ValueSubSection
 from .var import HeaderVariableSet
-
 from tradssat.format.utils import get_section_fmt
+from tradssat.error import *
 
 
 class InpFile(File):
@@ -18,7 +18,7 @@ class InpFile(File):
         self._header_vars = HeaderVariableSet(self._get_header_vars())
         super().__init__(file)
 
-    def write(self, file, force=False, check=True):
+    def write(self, file, force=False):
         lines = []
 
         write = force or file != self.file or self.changed()
@@ -29,8 +29,58 @@ class InpFile(File):
             with open(file, 'w', encoding=self.encoding) as f:
                 f.writelines(l + "\n" for l in lines)
 
-    def set_value(self, var, val, sect=None, subsect=None, cond=None):
-        self._values.set_value(var, val, sect=sect, subsect=subsect, cond=cond)
+    def set_value(self, var, val, header=False, sect=None, subsect=None, cond=None):
+        self._values.set_value(var, val, sect=sect, subsect=subsect, cond=cond, header=header)
+
+    def add_var(self, var, vals, header=False, sect=None, subsect=None):
+        """
+            Create a variable with values in current file.
+
+            Parameters
+            ----------
+            var: str
+                The name of variable would be created.
+            vals: str, int, float, list, dict
+                The values of the variable var.
+                If vals is a dict, the dict keys are line numbers and values are the variable values.
+                If vals is a dict, partial lines are allowed and the other line would be set to the
+                missing value of the variable.
+            sect: str
+                The section name that the var belong to.
+            subsect: int or list
+                The subsection index(s) that the var belong to.
+            header: bool
+                Indicate the variable is a header variable.
+
+            Returns
+            -------
+            None
+
+
+            Example:
+            ----------
+                # Add FMOPT variable with value 'Y' in its section and subsection.
+                add_var('FMOPT', 'Y')
+
+                # add 'IRVAL' variable with partial lines in its section and subsection 1.
+                # The other lines will be set to miss value.
+                add_var('IRVAL', {0: 29, 1: 28, 2: 27, 3: 28, 4: 27, 5: 28,...}, subsect=1)
+
+                # add 'IRVAL' variable with all values in its section and subsection 1.
+                add_var('IRVAL' [29, 28, 27, 28, 27, 28, 31, 28, 32, 34, 28, 28, 33, 34, 29, 29, 33, 35, 36], subsect=1)
+            """
+
+        if not self.exists(var, sect):
+            raise VariableNotFoundError(f'Variable {var} does not exists. Please check the name.')
+
+        if not header and self._header_vars.exists(var):
+            header = True
+
+        self._values.add_var(self._var_info.get_var(var, sect), vals,
+                                   header=header, sect=sect, subsect=subsect)
+
+    def exists(self, var, sect=None):
+        return self._header_vars.exists(var) or self._var_info.exists(var, sect)
 
     def changed(self):
         """

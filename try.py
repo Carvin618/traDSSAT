@@ -3,24 +3,44 @@ from tradssat import ExpFile
 import fortranformat as ff
 
 
-def test_expfile():
-    xfile = 'C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Maize\\IUAF9901.MZX'
+# def test_expfile():
+#     xfile = 'C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Soybean\\IUAM8801.SBX'
+#     exp = ExpFile(xfile)
+#     var_methods = {
+#         'var': exp.get_var,
+#         'value': exp.get_value,
+#         'var_spc': exp.get_var_spc,
+#         'dims_var': exp.get_dims_val,
+#         'var_size': exp.get_var_size,
+#         'var_doce': exp.get_var_code_miss,
+#         'var_lims': exp.get_var_lims,
+#         'var_type': exp.get_var_type,
+#     }
+#     print("Get variable 'FMOPT': ", exp.get_value('FMOPT'))
+#     #print("Set variable 'FMOPT': ", exp.set_value('FMOPT', 100, cond={'F': 1}))
+#     # for func in var_methods.values():
+#     #     print(func.__name__, func(var='CU'))
+#     exp.write('IUAM8801.SBX')
+
+def test_add_var():
+    # xfile = 'C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Soybean\\IUAM8801.SBX'
+    xfile = 'C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Sequence\\CHWC0012_modified.SQX'
     exp = ExpFile(xfile)
-    var_methods = {
-        'var': exp.get_var,
-        'value': exp.get_value,
-        'var_spc': exp.get_var_spc,
-        'dims_var': exp.get_dims_val,
-        'var_size': exp.get_var_size,
-        'var_doce': exp.get_var_code_miss,
-        'var_lims': exp.get_var_lims,
-        'var_type': exp.get_var_type,
-    }
-    print("Get variable 'FAMN': ", exp.get_value('FAMN', sect='FERTILIZERS (INORGANIC)'))
-    print("Set variable 'FAMN': ", exp.set_value('FAMN', 100, cond={'F': 1}))
+    # exp.set_value('ENAME', 'xxxxxxx', header=True)
+    # print("Variable 'ENAME': ", exp.get_value('ENAME'))
+    # exp.set_value('FNAME', 'Y')
+    # print("Variable 'FMOPT': ", exp.get_var('FMOPT'), exp.get_value('FMOPT'))
+    # print("Set variable 'FMOPT': ", exp.set_value('FMOPT', 100, cond={'F': 1}))
     # for func in var_methods.values():
     #     print(func.__name__, func(var='CU'))
-    exp.write('IUAF9901.MZX')
+    print()
+    print(exp.get_var('FMOPT'))
+    exp.add_var('IRVAL', {0: 29, 1: 28, 2: 27, 3: 28, 4: 27, 5: 28, 6: 31, 7: 28, 8: 32, 9: 34, 10: 28,}, subsect=1)
+
+    # exp.set_value('OPOUT', 'Y')
+    # exp.set_value('FMOPT', '')
+    print(exp.get_value('IRVAL', subsect=1))
+    exp.write('CHWC0012.SQX')
 
 
 # def check_weather():
@@ -58,6 +78,7 @@ def test_expfile():
 
 
 if __name__ == '__main__':
-    test_expfile()
+    # test_expfile()
+    test_add_var()
     # check_weather()
     # fortran_format()

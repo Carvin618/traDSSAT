@@ -34,6 +34,7 @@ LINE_FORMAT_SET = {
     '@ADDRESS': (ADDRESS_V, ADDRESS_L),
     '@SITE': (SITE_V, SITE_L),
     '@NOTES': (NOTES_V, NOTES_L),
+    '@ PAREA': (PLOT_INFO_V, PLOT_INFO_L),
     # Treatments
     '@N R O C': (TREATMENTS_V, TREATMENTS_L),
     # Cultivar

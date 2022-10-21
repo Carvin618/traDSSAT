@@ -3,6 +3,9 @@ import re
 import numpy as np
 import fortranformat as ff
 
+from .var import CharacterVar, IntegerVar, FloatVar
+from tradssat.error import *
+
 
 class FileValueSet(object):
     """
@@ -20,7 +23,8 @@ class FileValueSet(object):
         ----------
         name: str
             Name of the new section.
-
+        fmt: str
+            The Fortran format expression for the section line.
         """
         self._sections[name] = ValueSection(name, fmt)
 
@@ -58,9 +62,8 @@ class FileValueSet(object):
         return {name: sect.to_dict() for name, sect in self._sections.items()}
 
     def get_value(self, var, sect=None, subsect=None, cond=None):
-
         if isinstance(sect, str):
-            return self[sect].get_value(var, subsect, cond=cond)
+            return self[sect].get_value(var, subsect, cond)
         else:
             if isinstance(sect, dict):
                 sects = [
@@ -68,15 +71,33 @@ class FileValueSet(object):
                 ]
             else:
                 sects = self._sections.values()
-            return next(s.get_value(var, subsect, cond=cond) for s in sects if var in s)
 
-    def set_value(self, var, val, sect=None, subsect=None, cond=None):
+            try:
+                value = next(s.get_value(var, subsect, cond=cond) for s in sects if var in s)
+            except StopIteration:
+                raise ValueError(f'Variable "{var}" value not found.')
+
+            return value
+
+    def set_value(self, var, val, sect=None, subsect=None, cond=None, header=False):
         if sect is not None:
-            self[sect].set_value(var, val, subsect, cond=cond)
+            self[sect].set_value(var, val, subsect, cond=cond, header=header)
         else:
             for s in self:
                 if var in s:
-                    s.set_value(var, val, subsect, cond=cond)
+                    s.set_value(var, val, subsect, cond=cond, header=header)
+
+    def add_var(self, var, values, header, sect=None, subsect=None):
+        if sect:
+            if sect not in self._sections:
+                raise ValueError(f'Section {sect} does not exists.')
+
+            self._sections[sect].add_var(var, values, header, subsect)
+
+        elif var.sect:
+            self._sections[var.sect].add_var(var, values, header, subsect)
+        else:
+            raise ValueError(f'Parameter "section" should be provided.')
 
     def add_row(self, sect, subsect=None, vals=None):
         """
@@ -225,6 +246,8 @@ class ValueSection(object):
         }
 
     def get_value(self, var, subsect=None, cond=None):
+        if var in self._header_vars:
+            return self.get_header_value(var)
 
         subsect = self._valid_subsects(subsect)
 
@@ -241,7 +264,10 @@ class ValueSection(object):
 
         return np.concatenate(val)
 
-    def set_value(self, var, val, subsect=None, cond=None):
+    def set_value(self, var, val, subsect=None, cond=None, header=False):
+        if header:
+            self.set_header_value(var, val)
+            return
 
         subsect = self._valid_subsects(subsect)
 
@@ -258,6 +284,26 @@ class ValueSection(object):
 
         if not success:
             raise ValueError('Variable "{}" not found.'.format(var))
+
+    def get_header_value(self, var):
+        return self._header_vars.get_value(var)
+
+    def set_header_value(self, var, val):
+        if var not in self._header_vars:
+            raise ValueError(f'Variable "{var}" not found in "{self.name}" section header')
+
+        self._header_vars.set_value(var, val)
+
+    def add_var(self, var, vals, header=False, subsect=None):
+        if (not header) and (subsect == 0):
+            raise ValueError(f'Parameter "header" or "subsect" must be provided.')
+
+        if header:
+            self._header_vars.add_var(var, vals)
+        else:
+            subsect = self._valid_subsects(subsect)
+            for s in subsect:
+                self._subsections[s].add_var(var, vals)
 
     def add_row(self, subsect=None, vals=None):
         subsect = self._valid_subsects(subsect)
@@ -287,6 +333,10 @@ class ValueSection(object):
             subsects = range(len(self._subsections))
         elif isinstance(subsects, int):
             subsects = [subsects]
+        for s in subsects:
+            if s >= len(self._subsections):
+                raise ValueError(f'Subsection :{s}" does not exist. '
+                                 f'Only {len(self._subsections)} subsections exist.')
         return subsects
 
     def __iter__(self):
@@ -324,6 +374,39 @@ class ValueSubSection(object):
     def set_value(self, var, val, cond=None):
         filter_ = self.filter_cond(cond)
         self._vars[str(var)].set_value(val, i=filter_)
+
+    def add_var(self, var, vals):
+        # Multi-line variables.
+        if isinstance(vals, list):
+            if len(vals) != self.n_data():
+                raise ValueError(f'Variable {var} accept {self.n_data()} values, but {len(vals)} is given.')
+
+            for v in vals:
+                var.check_val(v)
+
+            self._vars[str(var)] = VariableValue(var, np.array([var.miss for _ in vals]))
+            self._vars[str(var)].set_value(vals)
+
+        elif isinstance(vals, dict):
+            if len(vals) > self.n_data():
+                raise ValueError(f'Variable {var} accept {self.n_data()} values, but {len(vals)} is given.')
+
+            for v in vals.values():
+                var.check_val(v)
+
+            self._vars[str(var)] = VariableValue(var, np.array([var.miss for _ in range(self.n_data())]))
+            self._vars[str(var)].set_value([vals[i] if i in vals else var.miss for i in range(self.n_data())])
+
+        # Single-line variable.
+        elif isinstance(vals, str) or isinstance(vals, int) or isinstance(vals, float):
+            var.check_val(vals)
+            self._vars[str(var)] = VariableValue(var, np.array([var.miss]))
+            self._vars[str(var)].set_value(vals)
+
+        else:
+            raise ValueError(f'vals parameter only accept "list", "dict", "str", "int" and "float" value.')
+
+        self.check_dims()
 
     def add_row(self, vals=None):
         """
@@ -363,11 +446,16 @@ class ValueSubSection(object):
             If not all variables have the same size.
         """
         if not len(np.unique([v.size() for v in self._vars.values()])) == 1:
-            raise ValueError('Not all variables in this subsection have the same size.')
+            raise ValueError(f'Not all variables in this subsection have the same size. {self}')
 
     def check_vals(self):
         for vr in self:
             vr.check_val()
+
+    def exists(self, var):
+        if str(var) in self._vars.keys():
+            return True
+        return False
 
     def n_data(self):
         """
@@ -604,6 +692,17 @@ class HeaderValues(object):
 
         """
         return self._subsect[var].val
+
+    def set_value(self, var, val):
+        if var not in self._subsect:
+            raise ValueError(f'Variable "{var}" not in section header. Please create.')
+        self._subsect.set_value(var, val)
+
+    def create_value(self, var, val):
+        self._subsect.create_value(var, val)
+
+    def exists(self, var):
+        return self._subsect.exists(var)
 
     def to_dict(self):
         """

@@ -196,6 +196,12 @@ class VariableSet(object):
                 msg = 'Variable {var} does not exist in section {sect}.'.format(var=var, sect=sect)
             raise ValueError(msg)
 
+    def exists(self, var, sect=None):
+        for vr in self._vars:
+            if str(vr) == var and _name_matches(vr.sect, sect, full=True):
+                return True
+        return False
+
     def variables(self):
         return self._vars
 
@@ -231,3 +237,9 @@ class HeaderVariableSet(object):
             )
         except StopIteration:
             raise ValueError('Variable {var} does not exist.'.format(var=var))
+
+    def exists(self, var):
+        if var in self._vars.keys():
+            return True
+        return False
+

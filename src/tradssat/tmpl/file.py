@@ -3,7 +3,7 @@ import fortranformat as ff
 
 from tradssat.utils import detect_encod
 from .vals import FileValueSet, ValueSubSection
-from .var import VariableSet, CODE_MISS
+from .var import VariableSet, CODE_MISS, CharacterVar, NumericVar
 from tradssat.format.utils import get_line_fmt
 
 
@@ -148,12 +148,19 @@ class File(object):
             #     for c in cutoffs]
             vals = l_reader.read(l)
             for vr, vl in zip(var_names, vals):
-                if vl is None or vl == ' ':
-                    vl = self.get_var_code_miss(vr)
-                if type(vl) == str:
+                if isinstance(self._var_info.get_var(vr, sect=section_name), CharacterVar):
                     vl = vl.strip(' .\t\n')
 
-                d_vals[vr][i] = vl
+                elif isinstance(self._var_info.get_var(vr, sect=section_name), NumericVar):
+                    if isinstance(vl, str) and vl.strip() in [None, '']:
+                        vl = self.get_var_code_miss(vr)
+                else:
+                    raise TypeError(f'Variable "{vr}" is "{type(vr)}" not accept "{type(vl)}" value.')
+                try:
+                    d_vals[vr][i] = vl
+                except ValueError:
+                    print(vals)
+                    # print(vl)
 
         l_vars = [self._var_info.get_var(vr, sect=section_name) for vr in var_names]
         l_vals = [d_vals[vr] for vr in var_names]

@@ -730,7 +730,10 @@ class HeaderValues(object):
         if self._subsect is None:
             return ''
         else:
-            return writer.write([vr.write(0) for vr in self._subsect])
+            try:
+                return writer.write([vr.write(0) for vr in self._subsect])
+            except TypeError:
+                print([vr.write(0) for vr in self._subsect])
 
     def changed(self):
         """

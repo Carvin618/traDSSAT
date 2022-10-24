@@ -1,5 +1,5 @@
 import os
-from tradssat import ExpFile
+from tradssat import ExpFile, WTHFile, SoilFile
 import fortranformat as ff
 
 
@@ -42,6 +42,11 @@ def test_add_var():
     print(exp.get_value('IRVAL', subsect=1))
     exp.write('CHWC0012.SQX')
 
+def test_soilfile():
+    sfile = "C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Soil\\SOIL.SOL"
+    sol = SoilFile(sfile)
+
+    sol.write('SOIL.SOL')
 
 # def check_weather():
 #     weather_dir = 'C:/Users/57block/workspace/dssat/data/dssat-csm-data/Weather'
@@ -79,6 +84,7 @@ def test_add_var():
 
 if __name__ == '__main__':
     # test_expfile()
-    test_add_var()
+    # test_add_var()
+    # test_soilfile()
     # check_weather()
     # fortran_format()

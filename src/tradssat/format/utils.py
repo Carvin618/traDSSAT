@@ -1,10 +1,15 @@
+import re
+
 from .exper_fmt import *
-# from .wth_fmt import *
+from .wth_fmt import *
+from .sol_fmt import *
+
+SOL_INST_SECTION = re.compile(r'^[A-Z]{2}[A-Z0-9]{3}[0-9]{5}$')
 
 DEFAULT_FMT = '0'
 
 SECTION_LINE_FORMAT_SET = {
-    # EXPER FILE
+    # EXPER FILEX
     'EXP.DET': EXP_S,
     'GENERAL': GENERAL_S,
     'TREATME': TREATMENTS_S,
@@ -18,17 +23,21 @@ SECTION_LINE_FORMAT_SET = {
     'RESIDUE': RESIDUES,
     'CHEMICA': CHEMICAL_S,
     'TILLAGE': TILLAGE_S,
-    'ENVIRON': ENVIRONMENT,
-    'HARVEST': HARVEST,
-    'SIMULAT': SIMULATION,
+    'ENVIRON': ENVIRONMENT_S,
+    'HARVEST': HARVEST_S,
+    'SIMULAT': SIMULATION_S,
 
-    # WEATHER FILE
-    # 'WEATHER': WEATHER_S,
+    # WEATHER FILEW
+    'WEATHER': WEATHER_S,
+
+    # SOIL FILES
+    'SOILS: ': SOIL_S,
+    'SLSOURCE': SOIL_SITE_S,
 
 }
 
 LINE_FORMAT_SET = {
-    # EXPER FILE:
+    # EXPER FILEX:
     # Experiment Details
     '@PEOPLE': (PEOPLE_V, PEOPLE_L),
     '@ADDRESS': (ADDRESS_V, ADDRESS_L),
@@ -79,9 +88,16 @@ LINE_FORMAT_SET = {
     '@N RESID': (SM_RESIDUES_LINE_V, SM_RESIDUES_LINE_L),
     '@N HARVE': (SM_HARVESTS_LINE_V, SM_HARVESTS_LINE_L),
 
-    # WEATHER FILE:
-    # '@ INSI  ': (WTH_FIRST_LINE_V, WTH_OTHER_LINES_L),
-    # '@DATE  S': (WTH_OTHER_LINES_V, WTH_OTHER_LINES_L),
+    # WEATHER FILEW:
+    '@ INSI  ': (WTH_FIRST_LINE_V, WTH_FIRST_LINE_L),
+    '@DATE  S': (WTH_OTHER_LINES_V, WTH_OTHER_LINES_L),
+
+    # SOIL FILES
+    '@SITE   ': (SOL_SECOND_LINE_V, SOL_SECOND_LINE_V),
+    '@ SCOM  ': (SOL_THIRD_LINE_V, SOL_THIRD_LINE_V),
+    '@  SLB  SLMH': (SOL_NL_LINE_V, SOL_NL_LINE_V),
+    '@  SLB SLMH': (SOL_NL_LINE_V, SOL_NL_LINE_V),              # IN00020001 section in SOIL.SOL have this format.
+    '@  SLB  SLPX': (SOL_NL_TO_4NL_FIRST_LINE_V, SOL_NL_TO_4NL_FIRST_LINE_V),
 }
 
 
@@ -91,6 +107,9 @@ def get_section_fmt(name):
         if name.startswith(k):
             res = SECTION_LINE_FORMAT_SET[k]
             break
+        if SOL_INST_SECTION.match(name):
+            res = SECTION_LINE_FORMAT_SET['SLSOURCE']
+            break
 
     return res
 
@@ -98,9 +117,15 @@ def get_section_fmt(name):
 def get_line_fmt(line: str):
     # '0' is expression to read and write empty string.
     res = (DEFAULT_FMT, DEFAULT_FMT)
+
     for key in LINE_FORMAT_SET:
         if line.startswith(key):
             res = LINE_FORMAT_SET[key]
             break
+
+    # Because there are two kinds of lines start with '@SITE' in FILEX and FILES.
+    # Thus, line start with '@SITE    ' in FILES should be matched individually.
+    if line.startswith('@SITE   '):
+        res = LINE_FORMAT_SET['@SITE   ']
 
     return res

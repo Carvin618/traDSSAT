@@ -64,7 +64,7 @@ main_vars = {
     IntegerVar('L', 2, spc=0, sect='FIELDS', info='Field level', fmt=LNFLD),
     CharacterVar('ID_FIELD', 8, sect='FIELDS', info='Field ID (Institute + Site + Field)', fmt=FLDNAM),
     CharacterVar('WSTA', 8, sect='FIELDS',  info='Weather station code (Institute+Site)', fmt=WSTA, right_align=False),
-    CharacterVar('FLSA', 5, sect='FIELDS',
+    FloatVar('FLSA', 5, 1, sect='FIELDS',
                  info='Slope and aspect, degrees from horizontal plus direction (W, NW, etc.)', fmt=SLOPE),
     FloatVar('FLOB', 5, 0, sect='FIELDS', info='Obstruction to sun, degrees', fmt=FLOB),
     CharacterVar('FLDT', 5, sect='FIELDS',  info='Drainage type, code', fmt=DFDRN),
@@ -85,7 +85,7 @@ main_vars = {
     FloatVar('FLWR', 5, 1, sect='FIELDS'),
     FloatVar('SLAS', 5, 1, sect='FIELDS'),
     CharacterVar('FLHST', 5, sect='FIELDS'),
-    CharacterVar('FHDUR', 5, sect='FIELDS'),
+    IntegerVar('FHDUR', 5, sect='FIELDS'),
 
     # Soil analysis
     IntegerVar('A', 2, spc=0, sect='SOIL ANALYSIS', info='Soil analysis level', fmt=LNSA),

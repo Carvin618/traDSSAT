@@ -56,11 +56,13 @@ class InpFile(File):
             -------
             None
 
-
             Example:
             ----------
-                # Add FMOPT variable with value 'Y' in its section and subsection.
-                add_var('FMOPT', 'Y')
+                # Add FMOPT variable with value 'Y' in its section and all subsection.
+                add_var('FMOPT', 'C')
+
+                # Add FMOPT variable with value 'Y' in its section and subsection 4.
+                add_var('FMOPT', 'C', subsect=4)
 
                 # add 'IRVAL' variable with partial lines in its section and subsection 1.
                 # The other lines will be set to miss value.

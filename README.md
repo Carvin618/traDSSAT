@@ -2,7 +2,7 @@
 TraDSSAT is a library to easily read and write DSSAT input and output files.
 
 ## Important:
-The new branch 'exp_rw_fix' only fix the issue of read and write FILEXs. Read other files would report errors. 
+The new branch 'dev' would include all updates of the code.  
 
 ## Status
 [![Build Status](https://travis-ci.org/julienmalard/traDSSAT.svg?branch=master)](https://travis-ci.org/julienmalard/traDSSAT)

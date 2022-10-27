@@ -6,7 +6,8 @@ _standard_cul_vars = {
         'class': CharacterVar,
         'args': dict(size=6, spc=0, info='Identification code or number for the specific cultivar.')
     },
-    'VRNAME': {'class': CharacterVar, 'args': dict(size=16, fill='.', info='Name of cultivar.', right_align=False)},
+    # 'VRNAME' would overflow in some cul files.
+    'VRNAME': {'class': CharacterVar, 'args': dict(size=16, fill=' ', info='Name of cultivar.', right_align=False)},
     'EXPNO': {
         'class': CharacterVar, 'args': dict(size=5, miss='.', info='Number of experiments used for calibration.')
     },  # Yes, I know. Number of experiments is a character var.
@@ -20,18 +21,18 @@ _standard_cul_vars = {
              },
     'PPSEN': {'class': FloatVar,
               'args': dict(
-                  size=5, dec=4,
+                  size=5, dec=3,
                   info='Slope of the relative response of development to photoperiod with time '
                        '(positive for shortday plants) (1/hour)')
               },
     'EM-FL': {'class': FloatVar,
-              'args': dict(size=5, dec=2,
+              'args': dict(size=5, dec=1,
                            info='Time between plant emergence and flower appearance (R1) (photothermal days)')
               },
     'FL-SH': {'class': FloatVar,
-              'args': dict(size=5, dec=2, info='Time between first flower and first pod (R3) (photothermal days)')},
+              'args': dict(size=5, dec=1, info='Time between first flower and first pod (R3) (photothermal days)')},
     'FL-SD': {'class': FloatVar,
-              'args': dict(size=5, dec=2, info='Time between first flower and first seed (R5) (photothermal days)')},
+              'args': dict(size=5, dec=1, info='Time between first flower and first seed (R5) (photothermal days)')},
     'SD-PM': {'class': FloatVar,
               'args': dict(size=5, dec=2,
                            info='Time between first seed (R5) and physiological maturity (R7) (photothermal days)')
@@ -40,20 +41,20 @@ _standard_cul_vars = {
               'args': dict(size=5, dec=2,
                            info='Time between first flower (R1) and end of leaf expansion (photothermal days)')},
     'LFMAX': {'class': FloatVar,
-              'args': dict(size=5, dec=3,
+              'args': dict(size=5, dec=2,
                            info='Maximum leaf photosynthesis rate at 30 C, 350 vpm CO2, and high light (mg CO2/m2-s)')},
     'SLAVR': {'class': FloatVar,
-              'args': dict(size=5, dec=1,
+              'args': dict(size=5, dec=0,
                            info='Specific leaf area of cultivar under standard growth conditions (cm2/g)')},
     'SIZLF': {'class': FloatVar,
-              'args': dict(size=5, dec=2, info='Maximum size of full leaf (three leaflets) (cm2)')},
+              'args': dict(size=5, dec=1, info='Maximum size of full leaf (three leaflets) (cm2)')},
     'XFRT': {'class': FloatVar,
              'args': dict(size=5, dec=2, info='Maximum fraction of daily growth that is partitioned to seed + shell')},
     'WTPSD': {'class': FloatVar,
-              'args': dict(size=5, dec=4, info='Maximum weight per seed (g)')},
+              'args': dict(size=5, dec=3, info='Maximum weight per seed (g)')},
     'SFDUR': {'class': FloatVar,
               'args': dict(
-                  size=5, dec=2,
+                  size=5, dec=1,
                   info='Seed filling duration for pod cohort at standard growth conditions (photothermal days)')},
     'SDPDV': {'class': FloatVar,
               'args': dict(size=5, dec=2, info='Average seed per pod under standard growing conditions (#/pod)')},
@@ -78,8 +79,7 @@ _standard_eco_vars = {
              'args': dict(size=6, spc=0, info='Code for the ecotype to which a cultivar belongs (see *.cul')
              },
     'ECONAME': {'class': CharacterVar,
-
-                'args': dict(size=17, fill='.',
+                'args': dict(size=17, fill=' ',
                              info='Name of the ecotype, which is referenced from *.CUL file',
                              right_align=False)},
     'MG': {'class': CharacterVar,

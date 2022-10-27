@@ -31,12 +31,11 @@ class File(object):
 
         with open(self.file, encoding=self.encoding) as f:
             section = []  # To store lines that go in the same section
-            for l in f.readlines():
-
-                if l[0] == '!':  # skip comments
+            for line in f.readlines():
+                if line[0] in ['!', '$']:  # skip comments, some line in CUL files would start with '$' still skip.
                     continue
 
-                if l[0] == '*':  # start of section
+                if line[0] == '*':  # start of section
 
                     # Process any previously stored block
                     if section:
@@ -45,8 +44,8 @@ class File(object):
                     # Clear the current block
                     section.clear()
 
-                if l.strip():
-                    section.append(l)  # Append current line to block
+                if line.strip():
+                    section.append(line)  # Append current line to block
 
             # Read the last block too
             self._read_section(section)
@@ -162,10 +161,10 @@ class File(object):
                     d_vals[vr][i] = vl
                 except ValueError as err:
                     print(vals)
-                    print(vr)
-                    print(i)
-                    print(vl)
-                    print(d_vals[vr][i])
+                    # print(vr)
+                    # print(i)
+                    # print(vl)
+                    # print(d_vals[vr][i])
                     raise err
                     # print(vl)
 
@@ -180,21 +179,19 @@ class File(object):
         section_name, section_lines = self._process_section_header(section)
 
         subblock = []
-        for l in section_lines:  # skip first line (with "*")
-
+        for line in section_lines:  # skip first line (with "*")
             # In some climate file, variable line 'BEGYR' doesn't start with '@'.
-            if l.startswith(' BEGYR'):
-                l = l.replace(' ', '@', 1)
+            if line.startswith(' BEGYR'):
+                line = line.replace(' ', '@', 1)
 
-            if l[0] == '@':
-
+            if line[0] == '@':
                 if subblock:
                     self._read_subsection(section_name, subblock)
                 subblock.clear()
 
             # Append current line to section
-            if l.strip().strip('\x1a'):  # '\x1a' needed for obscure character DSSAT likes to append to .SNX/SQX
-                subblock.append(l)
+            if line.strip().strip('\x1a'):  # '\x1a' needed for obscure character DSSAT likes to append to .SNX/SQX
+                subblock.append(line)
 
         if subblock:
             self._read_subsection(section_name, subblock)

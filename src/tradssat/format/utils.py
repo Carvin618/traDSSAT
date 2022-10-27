@@ -4,12 +4,14 @@ from .exper_fmt import *
 from .wth_fmt import *
 from .cli_fmt import *
 from .sol_fmt import *
+from .geno_fmt import *
 
 TRT_SECTION = re.compile(r'TREATMENTS(\W+[-]+FACTOR LEVELS[-]+)?')
 GENERAL_SECTION = 'GENERAL'
 SOL_INST_SECTION = re.compile(r'^[A-Z]{2}[A-Z0-9]{3}[0-9]{5}$')
 WEATHER_SECTION = re.compile(r'^WEATHER\s(DATA\s)?:(.)*')
 CLIMATE_SECTION = re.compile(r'^CLIMATE\s?:(.)*')
+CULTINAR_SECTION = re.compile(r'^(.)+:(.)*')
 
 DEFAULT_FMT = '0'
 
@@ -42,11 +44,13 @@ SECTION_LINE_FORMAT_SET = {
     'RANGE C': RANGE_CHECK_S,
     'FLAGGED': FLAGGED_DATA_S,
 
-
     # SOIL FILES
     'SOILS: ': SOIL_S,
     'SLSOURCE': SOIL_SITE_S,
 
+    # GENOTYPE FILES
+    'GENOTYPE': CULTIVAR_S,
+    'ECOTYPE': ECOTYPE_S,
 }
 
 LINE_FORMAT_SET = {
@@ -117,29 +121,33 @@ LINE_FORMAT_SET = {
     '@BEGYR ': (FLAGGED_DATA_FIRST_LINE_V, FLAGGED_DATA_FIRST_LINE_L),
     '@         TOTAL': (FLAGGED_DATA_OTHER_LINES_V, FLAGGED_DATA_OTHER_LINES_L),
 
-
-    
-
     # SOIL FILES
     '@SITE   ': (SOL_SECOND_LINE_V, SOL_SECOND_LINE_V),
     '@ SCOM  ': (SOL_THIRD_LINE_V, SOL_THIRD_LINE_V),
     '@  SLB  SLMH': (SOL_NL_LINE_V, SOL_NL_LINE_V),
     '@  SLB SLMH': (SOL_NL_LINE_V, SOL_NL_LINE_V),              # IN00020001 section in SOIL.SOL have this format.
     '@  SLB  SLPX': (SOL_NL_TO_4NL_FIRST_LINE_V, SOL_NL_TO_4NL_FIRST_LINE_V),
+
+    # GENOTYPE FILES
+    '@VAR#  VRNAME': (CULTIVAR_GRO_V, CULTIVAR_GRO_L),
+    '@VAR#  VAR-NAME': (CULTIVAR_SIM_V, CULTIVAR_SIM_L),
+    '@ECO#  ECONAME': (ECOTYPE_GRO_V, ECOTYPE_GRO_L),
+    '@ECO#     P1': (ECOTYPE_SIM_V, ECOTYPE_SIM_L),
 }
 
 
 def get_section_fmt(name):
-    res = DEFAULT_FMT
     for k in SECTION_LINE_FORMAT_SET:
         if name.startswith(k):
-            res = SECTION_LINE_FORMAT_SET[k]
-            break
-        if SOL_INST_SECTION.match(name):
-            res = SECTION_LINE_FORMAT_SET['SLSOURCE']
-            break
+            return SECTION_LINE_FORMAT_SET[k]
 
-    return res
+        if SOL_INST_SECTION.match(name):
+            return SECTION_LINE_FORMAT_SET['SLSOURCE']
+
+        if CULTINAR_SECTION.match(name):
+            return SECTION_LINE_FORMAT_SET['GENOTYPE']
+
+    return DEFAULT_FMT
 
 
 def get_line_fmt(line: str):

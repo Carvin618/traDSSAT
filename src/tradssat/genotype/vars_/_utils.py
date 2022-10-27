@@ -1,6 +1,10 @@
+from tradssat.format.utils import CULTINAR_SECTION
+
+
 def _gen_vars(dict_vars):
     vars_set = set()
     for name, d_var in dict_vars.items():
+        d_var['args']['sect']=CULTINAR_SECTION
         vars_set.add(d_var['class'](name, **d_var['args']))
 
     return vars_set

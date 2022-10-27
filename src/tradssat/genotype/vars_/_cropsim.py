@@ -8,7 +8,7 @@ _standard_cul_vars = {
     },
     'VAR-NAME': {
         'class': CharacterVar,
-        'args': dict(size=16, fill='.', info='Name of cultivar.')
+        'args': dict(size=16, fill=' ', info='Name of cultivar.', right_align=False)
     },
     'EXP#': {
         'class': CharacterVar,
@@ -121,7 +121,7 @@ _standard_eco_vars = {
     },
     'ECONAME': {
         'class': CharacterVar,
-        'args': dict(size=17, fill='.', info='Ecotype name')
+        'args': dict(size=17, fill=' ', info='Ecotype name', right_align=False),
     },
     'AWNS': {
         'class': FloatVar,

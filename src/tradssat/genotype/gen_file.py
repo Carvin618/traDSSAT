@@ -1,4 +1,5 @@
 import os
+import re
 
 from tradssat.tmpl import InpFile
 from .vars_.alfrm import cul_vars_ALFRM, eco_vars_ALFRM
@@ -45,6 +46,8 @@ from .vars_.vbgro import cul_vars_VBGRO, eco_vars_VBGRO
 from .vars_.whaps import cul_vars_WHAPS, eco_vars_WHAPS
 from .vars_.whcer import cul_vars_WHCER, eco_vars_WHCER
 from .vars_.whcrp import cul_vars_WHCRP, eco_vars_WHCRP
+from .vars_.header import cul_header_vars, eco_header_vars
+
 
 vars_gen = {
     'ALFRM': {'.cul': cul_vars_ALFRM, '.eco': eco_vars_ALFRM},
@@ -121,9 +124,15 @@ class CULFile(GenFile):
     """
     ext = '.CUL'
 
+    def _get_header_vars(self):
+        return {re.compile(r'^(.)+:'): cul_header_vars}
+
 
 class ECOFile(GenFile):
     """
     Ecotype (.ECO) input file reader.
     """
     ext = '.ECO'
+
+    def _get_header_vars(self):
+        return {re.compile(r'^(.)+:'): eco_header_vars}

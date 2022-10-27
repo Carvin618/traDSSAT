@@ -91,8 +91,21 @@ def add_var_wth():
 def cul_file():
     cfile = "C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-os\\Data\\Genotype\\ALFRM048.CUL"
     cul = CULFile(cfile)
-
     cul.write('ALFRM048.CUL')
+
+    cfile = "C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-os\\Data\\Genotype\\BACER048.CUL"
+    cul = CULFile(cfile)
+    cul.write('BACER048.CUL')
+
+
+def eco_file():
+    ecofile = "C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-os\\Data\\Genotype\\ALFRM048.ECO"
+    eco = ECOFile(ecofile)
+    eco.write('ALFRM048.ECO')
+
+    ecofile = "C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-os\\Data\\Genotype\\BACER048.ECO"
+    eco = ECOFile(ecofile)
+    eco.write('BACER048.ECO')
 
 
 def fortran_format():
@@ -111,11 +124,13 @@ def fortran_format():
 
 
 if __name__ == '__main__':
-    expfile()
-    add_var_exp()
-    soilfile()
-    add_var_soil()
-    wth_file()
-    add_var_wth()
-    cli_file()
-    fortran_format()
+    # expfile()
+    # add_var_exp()
+    # soilfile()
+    # add_var_soil()
+    # wth_file()
+    # add_var_wth()
+    # cli_file()
+    # fortran_format()
+    # cul_file()
+    eco_file()

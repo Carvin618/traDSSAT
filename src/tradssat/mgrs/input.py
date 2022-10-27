@@ -1,6 +1,6 @@
 import numpy as np
 
-from tradssat.exper.exper_vars import TRT_HEAD, GENERAL
+from tradssat.format.utils import TRT_SECTION, GENERAL_SECTION
 from tradssat.mgrs.exp_mgr import _level_codes, _factor_codes, _factor_to_code
 from .exp_mgr import ExpFileMgr
 from .gen_mgr import PeriphGenMgr
@@ -20,7 +20,7 @@ def _valid_factor(factor):
 
 class DSSATRun(object):
     """
-    General manager for DSSAT run input files.
+    GENERAL_SECTION manager for DSSAT run input files.
     """
 
     def __init__(self, file, model=None):
@@ -49,9 +49,9 @@ class DSSATRun(object):
 
         self.check()
 
-    def get_general_val(self, var):
+    def get_GENERAL_SECTION_val(self, var):
         """
-        Obtain a variable value from the `GENERAL` section of the EXP file.
+        Obtain a variable value from the `GENERAL_SECTION` section of the EXP file.
         
         Parameters
         ----------
@@ -63,11 +63,11 @@ class DSSATRun(object):
         np.ndarray
             Variable value.
         """
-        return self.exp.get_file_val(var, sect=GENERAL)
+        return self.exp.get_file_val(var, sect=GENERAL_SECTION)
 
-    def set_general_val(self, var, val):
+    def set_GENERAL_SECTION_val(self, var, val):
         """
-        Sets a variable value in the `GENERAL` section of the EXP file.
+        Sets a variable value in the `GENERAL_SECTION` section of the EXP file.
 
         Parameters
         ----------
@@ -76,7 +76,7 @@ class DSSATRun(object):
         val: str | float | int | np.ndarray
             New value for the variable.
         """
-        self.exp.set_file_val(var, val, sect=GENERAL)
+        self.exp.set_file_val(var, val, sect=GENERAL_SECTION)
 
     def add_treatment(self, name, ops=None, factors=None):
         """
@@ -111,7 +111,7 @@ class DSSATRun(object):
         }
         d_vals.update(factors)
 
-        self.exp.add_row(sect=TRT_HEAD, subsect=0, vals=d_vals)
+        self.exp.add_row(sect=TRT_SECTION, subsect=0, vals=d_vals)
 
     def remove_treatment(self, trt):
         """
@@ -124,7 +124,7 @@ class DSSATRun(object):
         """
         if isinstance(trt, str):
             trt = self.get_trt_num(trt)
-        self.exp.remove_row(sect=TRT_HEAD, subsect=0, cond={'N': trt})
+        self.exp.remove_row(sect=TRT_SECTION, subsect=0, cond={'N': trt})
 
     def add_factor_level(self, factor, vals):
         """
@@ -169,7 +169,7 @@ class DSSATRun(object):
         trt = self._valid_trt(trt)
 
         trt_nums = self.treatments()
-        levels = self.exp.get_file_val(factor, sect=TRT_HEAD)
+        levels = self.exp.get_file_val(factor, sect=TRT_SECTION)
 
         return levels[trt_nums == trt][0]
 
@@ -189,7 +189,7 @@ class DSSATRun(object):
         factor = _valid_factor(factor)
         trt = self._valid_trt(trt)
 
-        self.exp.set_file_val(factor, level, sect=TRT_HEAD, subsect=0, cond={'N': trt})
+        self.exp.set_file_val(factor, level, sect=TRT_SECTION, subsect=0, cond={'N': trt})
 
     def get_factor_level_val(self, var, level):
         """
@@ -324,7 +324,7 @@ class DSSATRun(object):
 
         # renumber treatments
         trts = np.arange(self.treatments().size)
-        self.exp.set_file_val('N', trts, sect=TRT_HEAD)
+        self.exp.set_file_val('N', trts, sect=TRT_SECTION)
 
         # renumber factor levels, and reorder them in subsections
         pass

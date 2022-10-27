@@ -732,8 +732,9 @@ class HeaderValues(object):
         else:
             try:
                 return writer.write([vr.write(0) for vr in self._subsect])
-            except TypeError:
+            except TypeError as err:
                 print([vr.write(0) for vr in self._subsect])
+                raise err
 
     def changed(self):
         """

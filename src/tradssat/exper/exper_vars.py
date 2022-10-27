@@ -2,9 +2,7 @@ import re
 
 from tradssat.tmpl.var import CharacterVar, FloatVar, IntegerVar
 from tradssat.format.exper_fmt import *
-
-TRT_HEAD = re.compile(r'TREATMENTS(\W+[-]+FACTOR LEVELS[-]+)?')
-GENERAL = 'GENERAL'
+from tradssat.format.utils import TRT_SECTION, GENERAL_SECTION
 
 header_vars = [
     CharacterVar('EXPCODE', 10, sect='EXP.DETAILS: ', info='Experiment identifier', fmt=EXPCODE),
@@ -16,43 +14,43 @@ main_vars = {
     # CharacterVar('', 5, hidden=True),
 
     # General
-    CharacterVar('PEOPLE', 75,  sect=GENERAL, info='Names of scientists', right_align=False),
-    CharacterVar('ADDRESS', 75,  sect=GENERAL, info='Contact address of principal scientist', right_align=False),
-    CharacterVar('SITE', 75,  sect=GENERAL, info='Name and location of experimental site(s)', right_align=False),
+    CharacterVar('PEOPLE', 75,  sect=GENERAL_SECTION, info='Names of scientists', right_align=False),
+    CharacterVar('ADDRESS', 75,  sect=GENERAL_SECTION, info='Contact address of principal scientist', right_align=False),
+    CharacterVar('SITE', 75,  sect=GENERAL_SECTION, info='Name and location of experimental site(s)', right_align=False),
 
-    FloatVar('PAREA', 6, 1, sect=GENERAL, spc=3, info='Gross plot area per rep, m-2'),
-    IntegerVar('PRNO', 5, sect=GENERAL, info='Rows per plot'),
-    FloatVar('PLEN', 5, 1, sect=GENERAL, info='Plot length, m'),
-    IntegerVar('PLDR', 5, sect=GENERAL, info='Plots relative to drains, degrees'),
-    IntegerVar('PLSP', 5, sect=GENERAL, info='Plot spacing, cm'),
-    CharacterVar('PLAY', 5, sect=GENERAL, info='Plot layout'),
-    FloatVar('HAREA', 5, 1, sect=GENERAL, info='Harvest area, m-2'),
-    IntegerVar('HRNO', 5, sect=GENERAL, info='Harvest row number'),
-    FloatVar('HLEN', 5, 1, sect=GENERAL, info='Harvest row length, m'),
-    CharacterVar('HARM', 15,  sect=GENERAL, info='Harvest method', right_align=False),
+    FloatVar('PAREA', 6, 1, sect=GENERAL_SECTION, spc=3, info='Gross plot area per rep, m-2'),
+    IntegerVar('PRNO', 5, sect=GENERAL_SECTION, info='Rows per plot'),
+    FloatVar('PLEN', 5, 1, sect=GENERAL_SECTION, info='Plot length, m'),
+    IntegerVar('PLDR', 5, sect=GENERAL_SECTION, info='Plots relative to drains, degrees'),
+    IntegerVar('PLSP', 5, sect=GENERAL_SECTION, info='Plot spacing, cm'),
+    CharacterVar('PLAY', 5, sect=GENERAL_SECTION, info='Plot layout'),
+    FloatVar('HAREA', 5, 1, sect=GENERAL_SECTION, info='Harvest area, m-2'),
+    IntegerVar('HRNO', 5, sect=GENERAL_SECTION, info='Harvest row number'),
+    FloatVar('HLEN', 5, 1, sect=GENERAL_SECTION, info='Harvest row length, m'),
+    CharacterVar('HARM', 15,  sect=GENERAL_SECTION, info='Harvest method', right_align=False),
 
     # TODO: Need to support Multi-line.
-    CharacterVar('NOTES', 500, sect=GENERAL, info='Notes', right_align=False),
+    CharacterVar('NOTES', 500, sect=GENERAL_SECTION, info='Notes', right_align=False),
 
     # Treatments
-    IntegerVar('N', 2, spc=0, sect=TRT_HEAD, info='Treatment number'),
-    IntegerVar('R', 1, sect=TRT_HEAD, info='Rotation component: number (default=1)', fmt=ROTNO),
-    IntegerVar('O', 1, sect=TRT_HEAD, info='Rotation component: option (default=1)', fmt=ROTOPT),
-    IntegerVar('C', 1, sect=TRT_HEAD, info='Crop component number (default = 0)', fmt=CRPNO),
+    IntegerVar('N', 2, spc=0, sect=TRT_SECTION, info='Treatment number'),
+    IntegerVar('R', 1, sect=TRT_SECTION, info='Rotation component: number (default=1)', fmt=ROTNO),
+    IntegerVar('O', 1, sect=TRT_SECTION, info='Rotation component: option (default=1)', fmt=ROTOPT),
+    IntegerVar('C', 1, sect=TRT_SECTION, info='Crop component number (default = 0)', fmt=CRPNO),
     CharacterVar('TNAME', 25, info='Treatment name', fmt=TITLET, right_align=False),
-    IntegerVar('CU', 2, sect=TRT_HEAD, info='Cultivar level', fmt=LNCU),
-    IntegerVar('FL', 2, sect=TRT_HEAD, info='Field level', fmt=LNFLD),
-    IntegerVar('SA', 2, sect=TRT_HEAD, info='Soil analysis level', fmt=LNSA),
-    IntegerVar('IC', 2, sect=TRT_HEAD, info='Initial conditions level', fmt=LNIC),
-    IntegerVar('MP', 2, sect=TRT_HEAD, info='Planting level', fmt=LNPLT),
-    IntegerVar('MI', 2, sect=TRT_HEAD, info='Irrigation level', fmt=LNIR),
-    IntegerVar('MF', 2, sect=TRT_HEAD, info='Fertilizer level', fmt=LNFER),
-    IntegerVar('MR', 2, sect=TRT_HEAD, info='Residue level', fmt=LNRES),
-    IntegerVar('MC', 2, sect=TRT_HEAD, info='Chemical applications level', fmt=LNCHE),
-    IntegerVar('MT', 2, sect=TRT_HEAD, info='Tillage and rotations level', fmt=LNTIL),
-    IntegerVar('ME', 2, sect=TRT_HEAD, info='Environmental modifications level', fmt=LNENV),
-    IntegerVar('MH', 2, sect=TRT_HEAD, info='Harvest level', fmt=LNHAR),
-    IntegerVar('SM', 2, sect=TRT_HEAD, info='Simulation control level', fmt=LNSIM),
+    IntegerVar('CU', 2, sect=TRT_SECTION, info='Cultivar level', fmt=LNCU),
+    IntegerVar('FL', 2, sect=TRT_SECTION, info='Field level', fmt=LNFLD),
+    IntegerVar('SA', 2, sect=TRT_SECTION, info='Soil analysis level', fmt=LNSA),
+    IntegerVar('IC', 2, sect=TRT_SECTION, info='Initial conditions level', fmt=LNIC),
+    IntegerVar('MP', 2, sect=TRT_SECTION, info='Planting level', fmt=LNPLT),
+    IntegerVar('MI', 2, sect=TRT_SECTION, info='Irrigation level', fmt=LNIR),
+    IntegerVar('MF', 2, sect=TRT_SECTION, info='Fertilizer level', fmt=LNFER),
+    IntegerVar('MR', 2, sect=TRT_SECTION, info='Residue level', fmt=LNRES),
+    IntegerVar('MC', 2, sect=TRT_SECTION, info='Chemical applications level', fmt=LNCHE),
+    IntegerVar('MT', 2, sect=TRT_SECTION, info='Tillage and rotations level', fmt=LNTIL),
+    IntegerVar('ME', 2, sect=TRT_SECTION, info='Environmental modifications level', fmt=LNENV),
+    IntegerVar('MH', 2, sect=TRT_SECTION, info='Harvest level', fmt=LNHAR),
+    IntegerVar('SM', 2, sect=TRT_SECTION, info='Simulation control level', fmt=LNSIM),
 
     # Cultivars
     IntegerVar('C', 2, spc=0, sect='CULTIVARS', info='Cultivar level', fmt=LNCU),

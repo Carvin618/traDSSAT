@@ -78,8 +78,7 @@ class InpFile(File):
         if not header and self._header_vars.exists(var):
             header = True
 
-        self._values.add_var(self._var_info.get_var(var, sect), vals,
-                                   header=header, sect=sect, subsect=subsect)
+        self._values.add_var(self._var_info.get_var(var, sect), vals, header=header, sect=sect, subsect=subsect)
 
     def exists(self, var, sect=None):
         return self._header_vars.exists(var) or self._var_info.exists(var, sect)

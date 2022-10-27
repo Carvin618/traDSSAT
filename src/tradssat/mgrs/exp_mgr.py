@@ -1,5 +1,5 @@
 from tradssat import ExpFile
-from tradssat.exper.exper_vars import TRT_HEAD
+from tradssat.exper.exper_vars import TRT_SECTION
 from .mgr import PeriphFileMgr
 
 
@@ -15,10 +15,10 @@ class ExpFileMgr(PeriphFileMgr):
         self.file.set_value(var, val, sect=sect, subsect=subsect, cond=cond)
 
     def get_trt_nums(self):
-        return self.file.get_value('N', sect=TRT_HEAD)
+        return self.file.get_value('N', sect=TRT_SECTION)
 
     def get_trt_names(self):
-        return self.file.get_value('TNAME', sect=TRT_HEAD)
+        return self.file.get_value('TNAME', sect=TRT_SECTION)
 
     def add_row(self, sect, subsect=None, vals=None):
         self.file.add_row(sect=sect, subsect=subsect, vals=vals)

@@ -1,5 +1,7 @@
+import re
+
 from tradssat.tmpl import InpFile
-from .wth_vars import vars_
+from .wth_vars import main_vars, header_vars
 
 
 class WTHFile(InpFile):
@@ -10,4 +12,8 @@ class WTHFile(InpFile):
     ext = ['.WTH', '.WTG']
 
     def _get_var_info(self):
-        return vars_
+        return main_vars
+
+    def _get_header_vars(self):
+        # Both 'WEATHER :' and  'WEATHER DATA :' section name exists in WTH file.
+        return {re.compile(r'^WEATHER\s(DATA\s)?:'): header_vars}

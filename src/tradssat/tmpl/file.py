@@ -135,7 +135,7 @@ class File(object):
 
         n_lines = len(subblock) - 1  # -1 for the header line (with "@" )
 
-        d_vals = {vr: self._gen_empty_mtrx(vr, n_lines) for vr in var_names}
+        d_vals = {vr: self._gen_empty_mtrx(vr, n_lines, section_name) for vr in var_names}
 
         for i, l in enumerate(subblock[1:]):
             # Odd workaround necessary because several cultivar names in DSSAT are larger than the allowed space
@@ -152,14 +152,21 @@ class File(object):
                     vl = vl.strip(' .\t\n')
 
                 elif isinstance(self._var_info.get_var(vr, sect=section_name), NumericVar):
-                    if isinstance(vl, str) and vl.strip() in [None, '']:
+                    if isinstance(vl, str) and vl.strip() in ['']:
+                        vl = self.get_var_code_miss(vr)
+                    if vl is None:
                         vl = self.get_var_code_miss(vr)
                 else:
                     raise TypeError(f'Variable "{vr}" is "{type(vr)}" not accept "{type(vl)}" value.')
                 try:
                     d_vals[vr][i] = vl
-                except ValueError:
+                except ValueError as err:
                     print(vals)
+                    print(vr)
+                    print(i)
+                    print(vl)
+                    print(d_vals[vr][i])
+                    raise err
                     # print(vl)
 
         l_vars = [self._var_info.get_var(vr, sect=section_name) for vr in var_names]
@@ -174,6 +181,11 @@ class File(object):
 
         subblock = []
         for l in section_lines:  # skip first line (with "*")
+
+            # In some climate file, variable line 'BEGYR' doesn't start with '@'.
+            if l.startswith(' BEGYR'):
+                l = l.replace(' ', '@', 1)
+
             if l[0] == '@':
 
                 if subblock:
@@ -187,8 +199,8 @@ class File(object):
         if subblock:
             self._read_subsection(section_name, subblock)
 
-    def _gen_empty_mtrx(self, var, size):
-        tp = self.get_var_type(var)
+    def _gen_empty_mtrx(self, var, size, sect=None):
+        tp = self.get_var_type(var, sect)
         if tp == 'float':
             dtype = float
         elif tp == 'int':

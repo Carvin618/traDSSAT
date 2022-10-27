@@ -1,5 +1,5 @@
 import os
-from tradssat import ExpFile, WTHFile, SoilFile
+from tradssat import ExpFile, WTHFile, SoilFile, CULFile, ECOFile, CLIFile
 import fortranformat as ff
 
 
@@ -62,23 +62,37 @@ def add_var_soil():
     sol.write('SOIL.SOL')
 
 
-def weather():
-    weather_dir = 'C:/Users/57block/workspace/dssat/data/dssat-csm-data/Weather'
-    sequence_dir = 'C:/Users/57block/workspace/dssat/data/dssat-csm-data/Sequence'
+def wth_file():
+    filew = 'C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Weather\\IUAF8801.WTH'
+    wth = WTHFile(filew)
+    wth.write('IUAF8801.WTH')
 
-    weather_files = os.listdir(weather_dir)
-    sequence_files = os.listdir(sequence_dir)
 
-    #print(weather_files[0])
-    #print(squence_files[0])
+def cli_file():
+    cli_file = 'C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Weather\\Climate\\CHER.CLI'
+    cli = CLIFile(cli_file)
+    cli.write('CHER.CLI')
 
-    common_file = []
 
-    for f in sequence_files:
-        if f.split('.')[0] in weather_files:
-            common_file.append(f)
+def add_var_wth():
+    filew = 'C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Weather\\IUAF8801.WTH'
+    wth = WTHFile(filew)
 
-    print(common_file)
+    wth.add_var('DEWP', vals=[1 for _ in range(366)], subsect=1, sect='WEATHER DATA :')
+    wth.write('IUAF8801.WTH')
+
+    filew = 'C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Weather\\DTCM6301.WTH'
+    wth = WTHFile(filew)
+
+    # wth.add_var('EVAP', vals=[1 for _ in range(364)], subsect=1, sect='WEATHER :')
+    wth.write('DTCM6301.WTH')
+
+
+def cul_file():
+    cfile = "C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-os\\Data\\Genotype\\ALFRM048.CUL"
+    cul = CULFile(cfile)
+
+    cul.write('ALFRM048.CUL')
 
 
 def fortran_format():
@@ -97,9 +111,11 @@ def fortran_format():
 
 
 if __name__ == '__main__':
-    # expfile()
-    # add_var_exp()
-    # soilfile()
+    expfile()
+    add_var_exp()
+    soilfile()
     add_var_soil()
-    # weather()
-    # fortran_format()
+    wth_file()
+    add_var_wth()
+    cli_file()
+    fortran_format()

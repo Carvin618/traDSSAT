@@ -1,4 +1,5 @@
 import os
+import fortranformat as ff
 
 from .file import File
 from .vals import ValueSubSection
@@ -118,16 +119,26 @@ class InpFile(File):
             h_vars = self._header_vars.get_vars(match)
 
             l_vals = []
-            for vr in h_vars:
-                size = vr.size + vr.spc
-                val = header_text[:size].strip()
+
+            reader = ff.FortranRecordReader(get_section_fmt(section_name))
+            try:
+                vals = reader.read(header_text)
+            except ValueError as ve:
+                raise ve
+            for vr, val in zip(h_vars, vals):
+                #size = vr.size + vr.spc
+                #val = header_text[:size].strip()
 
                 matr = self._gen_empty_mtrx(str(vr), size=1)
-                matr[:] = val
+                try:
+                    matr[:] = val
+                except ValueError as ve:
+                    print(val)
+                    raise ve
 
                 l_vals.append(matr)
 
-                header_text = header_text[size:]
+                #header_text = header_text[size:]
 
             header_vars_subsect = ValueSubSection(h_vars, l_vals=l_vals)
             self._values[section_name].set_header_vars(header_vars_subsect)

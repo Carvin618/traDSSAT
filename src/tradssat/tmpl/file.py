@@ -35,6 +35,9 @@ class File(object):
                 if line[0] in ['!', '$']:  # skip comments, some line in CUL files would start with '$' still skip.
                     continue
 
+                if '!' in line:
+                    line = line.strip('!')[0]             # Remove the inline comments.
+
                 if line[0] == '*':  # start of section
 
                     # Process any previously stored block
@@ -145,7 +148,11 @@ class File(object):
             #     (l[0 if c[0] == 0 else max(c[0], l.find(' ', c[0], c[1] - 1)):
             #        None if l.find(' ', c[1] - 1) < 0 else l.find(' ', c[1] - 1)]).strip()
             #     for c in cutoffs]
-            vals = l_reader.read(l)
+            try:
+                vals = l_reader.read(l)
+            except ValueError as ve:
+                raise ve
+
             for vr, vl in zip(var_names, vals):
                 if isinstance(self._var_info.get_var(vr, sect=section_name), CharacterVar):
                     vl = vl.strip(' .\t\n')

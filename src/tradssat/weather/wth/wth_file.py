@@ -2,6 +2,7 @@ import re
 
 from tradssat.tmpl import InpFile
 from .wth_vars import main_vars, header_vars
+from tradssat.format.utils import WEATHER_SECTION
 
 
 class WTHFile(InpFile):
@@ -16,4 +17,4 @@ class WTHFile(InpFile):
 
     def _get_header_vars(self):
         # Both 'WEATHER :' and  'WEATHER DATA :' section name exists in WTH file.
-        return {re.compile(r'^WEATHER\s(DATA\s)?:'): header_vars}
+        return {WEATHER_SECTION: header_vars}

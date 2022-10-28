@@ -1,10 +1,12 @@
 import os
-from tradssat import ExpFile, WTHFile, SoilFile, CULFile, ECOFile, CLIFile
+from tradssat import (ExpFile, WTHFile, SoilFile, CULFile, ECOFile,
+                      CLIFile, DSSATRun, set_dssat_dir, GeneticMgr, SoilMgr, WeatherFileMgr)
+
 import fortranformat as ff
 
 
 def expfile():
-    xfile = 'C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Soybean\\IUAM8801.SBX'
+    xfile = 'C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Maize\\IUAF9901.MZX'
     exp = ExpFile(xfile)
     var_methods = {
         'var': exp.get_var,
@@ -49,6 +51,11 @@ def soilfile():
     sol = SoilFile(sfile)
 
     sol.write('SOIL.SOL')
+
+    sfile = "C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Soil\\AG.SOL"
+    sol = SoilFile(sfile)
+
+    sol.write('AG.SOL')
 
 
 def add_var_soil():
@@ -123,7 +130,47 @@ def fortran_format():
     # print(line)
 
 
+def exp_file_mgr():
+    set_dssat_dir('C:\\Users\\57block\\workspace\\dssat\\data\\exp_example_win')
+    path = 'C:\\Users\\57block\\workspace\\dssat\\data\\exp_example_win\\IUAF9901.MZX'
+    run = DSSATRun(path)
+
+    # Get cultivar for treatment 1
+    run.get_trt_val('INGENO', trt=1)
+
+    # Change level of treatment factor
+    run.set_trt_factor_level(trt=1, factor='CULTIVARS', level=2)
+
+    # Change value of a factor level (in this case cultivar type)
+    run.set_factor_level_val('INGENO', 'IB0067', level=1)
+
+    # Access soil variable SLLL for treatment 2
+    run.get_trt_val('SLLL', trt=2)
+
+
+def gen_file_mgr():
+    gen = GeneticMgr(crop='MZIXM', cult='PC0001')
+
+    # Returns P1 for MZIXM cultivar PC0001
+    gen.get_value('P1')
+
+    # Returns ecotype variable TOPT for cultivar PC001
+    gen.get_value('TOPT')
+
+
+def soil_file_mgr():
+    soil_mgr = SoilMgr('IB00000005')
+    soil_mgr.get_value('SLU1')
+
+
+def weather_file_mgr():
+    wth_mgr = WeatherFileMgr('ACNM')
+    wth_mgr.get_value('RAIN')
+
+
 if __name__ == '__main__':
+    set_dssat_dir('C:\\Users\\57block\\workspace\\dssat\\data\\exp_example_win')
+
     # expfile()
     # add_var_exp()
     # soilfile()
@@ -133,4 +180,8 @@ if __name__ == '__main__':
     # cli_file()
     # fortran_format()
     # cul_file()
-    eco_file()
+    # eco_file()
+    # exp_file_mgr()
+    # gen_file_mgr()
+    # soil_file_mgr()
+    weather_file_mgr()

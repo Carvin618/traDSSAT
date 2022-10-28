@@ -1,5 +1,6 @@
 from tradssat.tmpl import InpFile
 from .exper_vars import main_vars, header_vars
+from tradssat.format.utils import EXP_SECTION
 
 
 class ExpFile(InpFile):
@@ -15,4 +16,4 @@ class ExpFile(InpFile):
         return main_vars
 
     def _get_header_vars(self):
-        return {'EXP.DETAILS: ': header_vars}
+        return {'EXP.DETAILS:': header_vars}

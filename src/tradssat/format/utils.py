@@ -6,10 +6,11 @@ from .cli_fmt import *
 from .sol_fmt import *
 from .geno_fmt import *
 
+EXP_SECTION = 'EXP.DETAILS:'
 TRT_SECTION = re.compile(r'TREATMENTS(\W+[-]+FACTOR LEVELS[-]+)?')
 GENERAL_SECTION = 'GENERAL'
-SOL_INST_SECTION = re.compile(r'^[A-Z]{2}[A-Z0-9]{3}[0-9]{5}$')
-WEATHER_SECTION = re.compile(r'^WEATHER\s(DATA\s)?:(.)*')
+SOL_INST_SECTION = re.compile(r'^[A-Z]{2}[A-Z_0-9]{4}[0-9]{2}[0-9]{0,2}')
+WEATHER_SECTION = re.compile(r'^WEATHER\s?(DATA\s)?:')
 CLIMATE_SECTION = re.compile(r'^CLIMATE\s?:(.)*')
 CULTINAR_SECTION = re.compile(r'^(.)+:(.)*')
 

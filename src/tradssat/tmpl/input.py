@@ -30,8 +30,12 @@ class InpFile(File):
             with open(file, 'w', encoding=self.encoding) as f:
                 f.writelines(l + "\n" for l in lines)
 
-    def set_value(self, var, val, header=False, sect=None, subsect=None, cond=None):
-        self._values.set_value(var, val, sect=sect, subsect=subsect, cond=cond, header=header)
+    def set_value(self, var, val, sect=None, subsect=None, cond=None):
+        header = self.is_header_var(var)
+        if header:
+            self._values.set_value(var, val, header=header, sect=sect)
+        else:
+            self._values.set_value(var, val, sect=sect, subsect=subsect, cond=cond)
 
     def add_var(self, var, vals, header=False, sect=None, subsect=None):
         """
@@ -150,6 +154,12 @@ class InpFile(File):
 
     def _get_header_vars(self):
         return {}
+
+    def is_header_var(self, var):
+        header_vars = [str(v) for val in self._get_header_vars().values() for v in val]
+        if var in header_vars:
+            return True
+        return False
 
     @classmethod
     def matches_file(cls, file):

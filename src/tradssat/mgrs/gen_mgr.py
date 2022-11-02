@@ -25,6 +25,10 @@ class PeriphGenMgr(PeriphFileMgr):
     def variables(self):
         return {str(vr) for f in self.files.values() for vr in f.variables()}
 
+    def write(self, force=False):
+        for genofile in self.files.values():
+            genofile.write(force)
+
 
 class GeneticMgr(object):
 
@@ -34,13 +38,17 @@ class GeneticMgr(object):
 
         geno_dir = get_dssat_subdir('Genotype')
 
-        self.eco_file = self.cult_file = None
+        self.cult_path = self.eco_path = self.eco_file = self.cult_file = None
+
         for f in os.listdir(geno_dir):
             name = os.path.split(f)[1]
             if CULFile.matches_file(name) and name.startswith(self.crop):
-                self.cult_file = CULFile(os.path.join(geno_dir, f))
+                self.cult_path = os.path.join(geno_dir, f)
+                self.cult_file = CULFile(self.cult_path)
+
             elif ECOFile.matches_file(name) and name.startswith(self.crop):
-                self.eco_file = ECOFile(os.path.join(geno_dir, f))
+                self.eco_path = os.path.join(geno_dir, f)
+                self.eco_file = ECOFile(self.eco_path)
 
             if self.eco_file is not None and self.cult_file is not None:
                 break
@@ -79,6 +87,10 @@ class GeneticMgr(object):
             vars_.update(self.eco_file.variables())
 
         return vars_
+
+    def write(self, force=False):
+        self.eco_file.write(file=self.eco_path, force=force)
+        self.cult_file.write(file=self.cult_path, force=force)
 
 
 _crop_models = {

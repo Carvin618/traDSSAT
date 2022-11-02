@@ -1,11 +1,13 @@
 import os
+import numpy as np
+
 from tradssat import (ExpFile, WTHFile, SoilFile, CULFile, ECOFile,
                       CLIFile, DSSATRun, set_dssat_dir, GeneticMgr, SoilMgr, WeatherFileMgr)
 
 import fortranformat as ff
 
 
-def expfile():
+def test_expfile():
     xfile = 'C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Maize\\IUAF9901.MZX'
     exp = ExpFile(xfile)
     var_methods = {
@@ -25,7 +27,7 @@ def expfile():
     exp.write('IUAM8801.SBX')
 
 
-def add_var_exp():
+def test_add_var_exp():
     # xfile = 'C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Soybean\\IUAM8801.SBX'
     xfile = 'C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Sequence\\CHWC0012_modified.SQX'
     exp = ExpFile(xfile)
@@ -46,7 +48,7 @@ def add_var_exp():
     exp.write('CHWC0012.SQX')
 
 
-def soilfile():
+def test_soilfile():
     sfile = "C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Soil\\SOIL.SOL"
     sol = SoilFile(sfile)
 
@@ -58,7 +60,7 @@ def soilfile():
     sol.write('AG.SOL')
 
 
-def add_var_soil():
+def test_add_var_soil():
     sfile = "C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Soil\\SOIL.SOL"
     sol = SoilFile(sfile)
 
@@ -69,19 +71,19 @@ def add_var_soil():
     sol.write('SOIL.SOL')
 
 
-def wth_file():
+def test_wth_file():
     filew = 'C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Weather\\IUAF8801.WTH'
     wth = WTHFile(filew)
     wth.write('IUAF8801.WTH')
 
 
-def cli_file():
+def test_cli_file():
     cli_file = 'C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Weather\\Climate\\CHER.CLI'
     cli = CLIFile(cli_file)
     cli.write('CHER.CLI')
 
 
-def add_var_wth():
+def test_add_var_wth():
     filew = 'C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-data\\Weather\\IUAF8801.WTH'
     wth = WTHFile(filew)
 
@@ -95,7 +97,7 @@ def add_var_wth():
     wth.write('DTCM6301.WTH')
 
 
-def cul_file():
+def test_cul_file():
     cfile = "C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-os\\Data\\Genotype\\ALFRM048.CUL"
     cul = CULFile(cfile)
     cul.write('ALFRM048.CUL')
@@ -105,7 +107,7 @@ def cul_file():
     cul.write('BACER048.CUL')
 
 
-def eco_file():
+def test_eco_file():
     ecofile = "C:\\Users\\57block\\workspace\\dssat\\data\\dssat-csm-os\\Data\\Genotype\\ALFRM048.ECO"
     eco = ECOFile(ecofile)
     eco.write('ALFRM048.ECO')
@@ -115,7 +117,7 @@ def eco_file():
     eco.write('BACER048.ECO')
 
 
-def fortran_format():
+def test_fortran_format():
     header_line = ff.FortranRecordReader('(////,3X,A2)')
     line = header_line.read('*EXP.DETAILS: CHWC0012SQ CHILLICOTHE, TX WHEAT COTTON ROTATION-IRRIGATED')
     print(line)
@@ -130,7 +132,7 @@ def fortran_format():
     # print(line)
 
 
-def exp_file_mgr():
+def test_exp_file_mgr():
     set_dssat_dir('C:\\Users\\57block\\workspace\\dssat\\data\\exp_example_win')
     path = 'C:\\Users\\57block\\workspace\\dssat\\data\\exp_example_win\\IUAF9901.MZX'
     run = DSSATRun(path)
@@ -148,7 +150,16 @@ def exp_file_mgr():
     run.get_trt_val('SLLL', trt=2)
 
 
-def gen_file_mgr():
+def test_set_file_val():
+    set_dssat_dir('C:\\Users\\57block\\workspace\\dssat\\data\\exp_example_win')
+    path = 'C:\\Users\\57block\\workspace\\dssat\\data\\exp_example_win\\IUAF9901.MZX'
+    run = DSSATRun(path)
+
+    run.remove_treatment(trt=2)
+    run.write('IUAF9901_modified.MZX')
+
+
+def test_gen_file_mgr():
     gen = GeneticMgr(crop='MZIXM', cult='PC0001')
 
     # Returns P1 for MZIXM cultivar PC0001
@@ -158,30 +169,11 @@ def gen_file_mgr():
     gen.get_value('TOPT')
 
 
-def soil_file_mgr():
+def test_soil_file_mgr():
     soil_mgr = SoilMgr('IB00000005')
     soil_mgr.get_value('SLU1')
 
 
-def weather_file_mgr():
+def test_weather_file_mgr():
     wth_mgr = WeatherFileMgr('ACNM')
     wth_mgr.get_value('RAIN')
-
-
-if __name__ == '__main__':
-    set_dssat_dir('C:\\Users\\57block\\workspace\\dssat\\data\\exp_example_win')
-
-    # expfile()
-    # add_var_exp()
-    # soilfile()
-    # add_var_soil()
-    # wth_file()
-    # add_var_wth()
-    # cli_file()
-    # fortran_format()
-    # cul_file()
-    # eco_file()
-    # exp_file_mgr()
-    # gen_file_mgr()
-    # soil_file_mgr()
-    weather_file_mgr()

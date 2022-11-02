@@ -577,7 +577,7 @@ class VariableValue(object):
             i = True
 
         if isinstance(val, np.ndarray) and (val.shape != self.val[i].shape):
-            if i is not True:
+            if not i:
                 raise ValueError('Cannot set value by index when shapes do not match.')
             self.val = np.array(val)
             self.changed = True

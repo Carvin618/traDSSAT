@@ -6,7 +6,8 @@ from .mgr import PeriphFileMgr
 class ExpFileMgr(PeriphFileMgr):
 
     def __init__(self, file):
-        self.file = ExpFile(file)
+        self.file_path = file
+        self.file = ExpFile(self.file_path)
 
     def get_file_val(self, var, subsect=None, sect=None):
         return self.file.get_value(var, subsect=subsect, sect=sect)
@@ -35,14 +36,21 @@ class ExpFileMgr(PeriphFileMgr):
 
         return self.file.get_value(var, sect=sect, cond={lv_cd: level})
 
-    def set_value(self, var, val, level):
+    def set_value(self, var, val, level, cond=None):
         sect = self.file.find_var_sect(var)
         lv_cd = _level_codes[_factor_to_code[sect]]
-
-        self.file.set_value(var, val, sect=sect, cond={lv_cd: level})
+        if cond:
+            cond = {lv_cd: level}.update(cond)
+        self.file.set_value(var, val, sect=sect, cond=cond)
 
     def variables(self):
         return self.file.variables()
+
+    def write(self, file=None, force=False):
+        if file:
+            self.file.write(file, force)
+        else:
+            self.file.write(self.file_path, force)
 
 
 _level_codes = {

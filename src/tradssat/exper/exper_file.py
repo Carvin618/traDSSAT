@@ -16,4 +16,6 @@ class ExpFile(InpFile):
         return main_vars
 
     def _get_header_vars(self):
-        return {'EXP.DETAILS:': header_vars}
+        return {EXP_SECTION: header_vars}
+
+

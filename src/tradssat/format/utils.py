@@ -9,7 +9,7 @@ from .geno_fmt import *
 EXP_SECTION = 'EXP.DETAILS:'
 TRT_SECTION = re.compile(r'TREATMENTS(\W+[-]+FACTOR LEVELS[-]+)?')
 GENERAL_SECTION = 'GENERAL'
-SOL_INST_SECTION = re.compile(r'^[A-Z]{2}[A-Z_0-9]{4}[0-9]{2}[0-9]{0,2}')
+SOL_INST_SECTION = re.compile(r'^[A-Za-z_0-9]{8}[A-Za-z_0-9]{0,2}')
 WEATHER_SECTION = re.compile(r'^WEATHER\s?(DATA\s)?:')
 CLIMATE_SECTION = re.compile(r'^CLIMATE\s?:(.)*')
 CULTINAR_SECTION = re.compile(r'^(.)+:(.)*')

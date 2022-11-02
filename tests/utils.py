@@ -8,7 +8,7 @@ from warnings import warn
 import numpy as np
 import numpy.testing as npt
 
-rsrcs = os.path.join(os.path.split(__file__)[0], 'rsrc/mock_DSSAT')
+rsrcs = os.path.join(os.path.split(__file__)[0], 'rsrc', 'mock_DSSAT')
 
 
 def find_files(inp_class, folder):

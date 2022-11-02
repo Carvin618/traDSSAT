@@ -236,13 +236,12 @@ class DSSATRun(object):
 
         return var_loc.get_value(var, level)
 
-    def set_trt_val(self, var, val, trt):
-
+    def set_trt_val(self, var, val, trt, cond=None):
         var_loc = self._locate_var(var)
         factor = self._get_var_factor(var, var_loc)
         level = self.get_trt_factor_level(trt, factor)
 
-        var_loc.set_value(var, val, level)
+        var_loc.set_value(var, val, level, cond=cond)
 
     def treatments(self, name=False):
         """
@@ -323,7 +322,7 @@ class DSSATRun(object):
         # remove factor levels not used in any treatment
 
         # renumber treatments
-        trts = np.arange(self.treatments().size)
+        trts = np.arange(self.treatments().size) + 1         # Treatment number is start from 1.
         self.exp.set_file_val('N', trts, sect=TRT_SECTION)
 
         # renumber factor levels, and reorder them in subsections

@@ -5,9 +5,9 @@ import unittest
 
 import numpy.testing as npt
 
-from src.tradssat import DSSATRun, DSSATResults, set_dssat_dir, ExpFile
-from src.tradssat.exper.exper_vars import TRT_HEAD
-from src.tradssat.out import PlantGroOut
+from tradssat import DSSATRun, DSSATResults, set_dssat_dir, ExpFile
+from tradssat.format.utils import TRT_SECTION
+from tradssat.out import PlantGroOut
 
 from tests.utils import rsrcs
 
@@ -28,7 +28,7 @@ class TestRunInput(unittest.TestCase):
 
         mock_dir = shutil.copytree(rsrcs, os.path.join(cls.temp_dir.name, 'DSSAT47'))
         set_dssat_dir(mock_dir)
-        cls.file = os.path.join(rsrcs, 'Exper/Maize/BRPI0202.MZX')
+        cls.file = os.path.join(rsrcs, 'Exper', 'Maize', 'BRPI0202.MZX')
 
         cls.dssat_run = DSSATRun(cls.file)
         cls.ref_expfile = ExpFile(cls.file)
@@ -37,15 +37,15 @@ class TestRunInput(unittest.TestCase):
         return DSSATRun(self.file)
 
     def test_get_general_val(self):
-        val = self.dssat_run.get_general_val('PEOPLE')
+        val = self.dssat_run.get_GENERAL_SECTION_val('PEOPLE')
         ref_val = self.ref_expfile.get_value('PEOPLE')
 
         self.assertEqual(val, ref_val)
 
     def test_set_general_val(self):
         run = self._get_run()
-        run.set_general_val('PEOPLE', 'me')
-        new_val = run.get_general_val('PEOPLE')
+        run.set_GENERAL_SECTION_val('PEOPLE', 'me')
+        new_val = run.get_GENERAL_SECTION_val('PEOPLE')
         self.assertEqual(new_val, 'me')
 
     def test_n_factor_levels(self):
@@ -56,7 +56,7 @@ class TestRunInput(unittest.TestCase):
 
     def test_get_trt_num(self):
         ref_names = self.ref_expfile.get_value('TNAME')
-        ref_i_s = self.ref_expfile.get_value('N', sect=TRT_HEAD)
+        ref_i_s = self.ref_expfile.get_value('N', sect=TRT_SECTION)
 
         ref_i = 4
         name = ref_names[ref_i_s == ref_i]
@@ -66,7 +66,7 @@ class TestRunInput(unittest.TestCase):
 
     def test_get_trt_name(self):
         ref_names = self.ref_expfile.get_value('TNAME')
-        ref_i = self.ref_expfile.get_value('N', sect=TRT_HEAD)
+        ref_i = self.ref_expfile.get_value('N', sect=TRT_SECTION)
 
         i = 2
         name = self.dssat_run.get_trt_name(i)
@@ -127,7 +127,7 @@ class TestRunInput(unittest.TestCase):
         trt = 5
 
         factors = self.ref_expfile.get_value(factor)
-        trts = self.ref_expfile.get_value('N', sect=TRT_HEAD)
+        trts = self.ref_expfile.get_value('N', sect=TRT_SECTION)
 
         ref = factors[trts == trt][0]
 

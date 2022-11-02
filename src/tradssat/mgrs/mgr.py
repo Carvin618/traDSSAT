@@ -13,6 +13,9 @@ class PeriphFileMgr(object):
     def variables(self):
         raise NotImplementedError
 
+    def write(self):
+        raise NotImplementedError
+
 
 def get_dssat_subdir(subdir):
     dssat_dir = get_dssat_dir()

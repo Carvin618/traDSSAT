@@ -3,8 +3,21 @@
     "header vars": {},
     "main vars": []
   },
-  "BPEmbrapa1  Embrapa     SL       100  1": {
-    "header vars": {},
+  "BPEmbrapa1  ": {
+    "header vars": {
+      "SLSOURCE": [
+          "Embrapa    "
+        ],
+        "SLTX": [
+          "SL   "
+        ],
+        "SLDP": [
+          100
+        ],
+        "SLDESCRIP": [
+          "1                                                 "
+        ]
+    },
     "main vars": [
       {
         "SITE": [

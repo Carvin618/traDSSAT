@@ -125,7 +125,7 @@ class CULFile(GenFile):
     ext = '.CUL'
 
     def _get_header_vars(self):
-        return {re.compile(r'^(.)+:'): cul_header_vars}
+        return {re.compile(r'^(.)+:(.)+(:)*'): cul_header_vars}
 
 
 class ECOFile(GenFile):

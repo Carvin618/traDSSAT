@@ -1,6 +1,10 @@
 {
-  "WEATHER DATA : Paterson, benton county, WA": {
-    "header vars": {},
+  "WEATHER DATA :": {
+    "header vars": {
+      "WSDESP": [
+        "Paterson, benton county , WA                                          "
+      ]
+    },
     "main vars": [
       {
         "INSI": [

@@ -18,7 +18,7 @@ main_vars = {
     FloatVar('WNDHT', 5, 1, sect=WEATHER_SECTION, info='Height of wind measurements, m'),
     IntegerVar('CCO2', 4, sect=WEATHER_SECTION, info='Atmospheric CO2, ppm'),
 
-    IntegerVar('DATE', 5, spc=0, sect=WEATHER_SECTION, info='Year + days from Jan. 1'),
+    CharacterVar('DATE', 5, spc=0, sect=WEATHER_SECTION, info='Year + days from Jan. 1'),
     FloatVar('SRAD', 5, 1, sect=WEATHER_SECTION, info='Solar radiation, MJ m-2 day-1'),
     FloatVar('TMAX', 5, 1, sect=WEATHER_SECTION, info='Air temperature maximum, °C'),
     FloatVar('TMIN', 5, 1, sect=WEATHER_SECTION, info='Air temperature minimum, °C'),

@@ -11,10 +11,11 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
-numpy = "^1.19.3"
+numpy = "1.23.5"
 chardet = "^4.0.0"
 pytest-cov = "^2.10.1"
 pandas = "^1.1.3"
+fortranformat = "^1.2.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.1"

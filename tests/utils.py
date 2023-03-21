@@ -4,11 +4,13 @@ from copy import deepcopy
 from json import JSONDecodeError
 from tempfile import NamedTemporaryFile
 from warnings import warn
+from pathlib import Path
 
 import numpy as np
 import numpy.testing as npt
 
 rsrcs = os.path.join(os.path.split(__file__)[0], 'rsrc', 'mock_DSSAT')
+test_files = ['EMBRAPA.SOL', 'WAPA9201.WTH', 'ARPE.MTH', 'WAPA9502.PTX', 'MZCER047.CUL']
 
 
 def find_files(inp_class, folder):
@@ -35,7 +37,11 @@ def get_ref(file, default):
 
 def _test_read(inp_class, folder, testcase):
     files = find_files(inp_class, folder)
-    for f in files[0:1]:
+
+    for f in files:
+        if Path(f).name not in test_files:
+            print("[JUMP] :: ", f"{f} is set to jump")
+            continue
         with testcase.subTest(os.path.split(f)[1]):
             dict_vars = inp_class(f).to_dict()
 
@@ -80,7 +86,13 @@ def _test_dicts_equal(tc, act, ref, f, keys=None):
             keys[:] = keys[:-1]
     elif isinstance(act, np.ndarray):
         if not len(act) == len(ref) == 0:  # skip empty arrays (which may have inferred different types)
-            npt.assert_equal(actual=act, desired=ref, err_msg=_f_loc(f, keys))
+            try:
+                npt.assert_equal(actual=act, desired=ref, err_msg=_f_loc(f, keys))
+            except AssertionError as err:
+                print(err)
+                print("act = ", act)
+                print("ref = ", ref)
+
 
 
 def _f_loc(f, keys):

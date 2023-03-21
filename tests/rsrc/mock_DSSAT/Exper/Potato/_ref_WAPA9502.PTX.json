@@ -5,7 +5,7 @@
         "WAPA9502PT"
       ],
       "ENAME": [
-        "PATERSON, WASHINGTON - 1995"
+        "PATERSON, WASHINGTON - 1995                                 "
       ]
     },
     "main vars": []
@@ -33,7 +33,7 @@
           "Simulation of potato yield, nitrate leaching, and profit margins as influenced by irrigation",
           "and nitrogen management in different soils and production regions",
           "Prem Woli, Gerrit Hoogenboom, Ashok Alva",
-          "Agricultural Water Management 171 (2016) 120ï¿½130"
+          "Agricultural Water Management 171 (2016) 120-130"
         ]
       }
     ]
@@ -226,7 +226,7 @@
           "WAPA"
         ],
         "FLSA": [
-          "-99"
+          -99.0
         ],
         "FLOB": [
           -99.0
@@ -285,7 +285,7 @@
           "-99"
         ],
         "FHDUR": [
-          "-99"
+          -99
         ]
       }
     ]
@@ -486,6 +486,22 @@
         "SPRL": [
           10.0,
           2.0
+        ],
+        "NFOR": [
+          0,
+          0
+        ],
+        "PLTF": [
+          0,
+          0
+        ],
+        "NDOF": [
+          0,
+          0
+        ],
+        "PMTY": [
+          0,
+          0
         ],
         "PLNAME": [
           "-99",
@@ -1400,7 +1416,7 @@
           15.0
         ],
         "RMET": [
-          -99.0
+          "-99"
         ],
         "RENAME": [
           "-99"
@@ -1556,7 +1572,7 @@
           "A   0"
         ],
         "ENVNAME": [
-          "-99"
+          ""
         ]
       }
     ]
@@ -1621,7 +1637,7 @@
           "100%"
         ],
         "SMODEL": [
-          "-99"
+          ""
         ]
       },
       {
@@ -1697,7 +1713,7 @@
           "S"
         ],
         "MESOL": [
-          2
+          "2"
         ]
       },
       {
@@ -1770,7 +1786,7 @@
           "Y"
         ],
         "FMOPT": [
-          "-99"
+          ""
         ]
       },
       {

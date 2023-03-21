@@ -108,7 +108,7 @@ class InpFile(File):
     def _process_section_header(self, lines):
 
         if lines[0][0] == '@':  # In case a section header is missing
-            self._values.add_section('', sect_fmt=get_section_fmt(''))
+            self._values.add_section('', fmt=get_section_fmt(''))
             return '', lines
 
         header_text = lines[0][1:].strip()  # Skip initial "*"
@@ -116,7 +116,7 @@ class InpFile(File):
         match = self._header_vars.matches(header_text)
         if match:
 
-            section_name = match.strip()
+            section_name = match
             self._values.add_section(section_name, get_section_fmt(section_name))
             header_text = header_text[len(match):]
 
@@ -125,8 +125,11 @@ class InpFile(File):
             l_vals = []
 
             reader = ff.FortranRecordReader(get_section_fmt(section_name))
+            # print('[DEBUG] ::', section_name, ' ', get_section_fmt(section_name))
             try:
+                # print("[DEBUG] :: ", section_name, ' ',get_section_fmt(section_name))
                 vals = reader.read(header_text)
+                # print("[DEBUG] :: ", vals)
             except ValueError as ve:
                 raise ve
             for vr, val in zip(h_vars, vals):

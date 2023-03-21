@@ -236,6 +236,7 @@ class HeaderVariableSet(object):
                 vr for hd, vrs in self._vars.items() for vr in vrs if _name_matches(hd, sect) and var == str(vr)
             )
         except StopIteration:
+            print(self._vars.items())
             raise ValueError('Variable {var} does not exist.'.format(var=var))
 
     def exists(self, var):

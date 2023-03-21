@@ -72,7 +72,7 @@
 
 *IB00000001  IBSNAT      SIC     210 DEFAULT - DEEP SILTY CLAY
 @SITE        COUNTRY          LAT     LONG SCS FAMILY
- Generic     Generic           -99    -99  Generic
+ Generic     Generic          -99      -99 Generic
 @ SCOM  SALB  SLU1  SLDR  SLRO  SLNF  SLPF  SMHB  SMPX  SMKE
    -99  0.11   6.0  0.30  85.0  1.00  1.00 IB001 IB001 IB001
 @  SLB  SLMH  SLLL  SDUL  SSAT  SRGF  SSKS  SBDM  SLOC  SLCL  SLSI  SLCF  SLNI  SLHW  SLHB  SCEC  SADC
@@ -89,7 +89,7 @@
 
 *IB00000002  IBSNAT      SIC     150 DEFAULT - MEDIUM SILTY CLAY
 @SITE        COUNTRY          LAT     LONG SCS FAMILY
- Generic     Generic           -99    -99  Generic
+ Generic     Generic          -99      -99 Generic
 @ SCOM  SALB  SLU1  SLDR  SLRO  SLNF  SLPF  SMHB  SMPX  SMKE
    -99  0.11   6.0  0.20  87.0  1.00  1.00 IB001 IB001 IB001
 @  SLB  SLMH  SLLL  SDUL  SSAT  SRGF  SSKS  SBDM  SLOC  SLCL  SLSI  SLCF  SLNI  SLHW  SLHB  SCEC  SADC
@@ -104,7 +104,7 @@
 
 *IB00000003  IBSNAT      SIC      60 DEFAULT - SHALLOW SILTY CLAY
 @SITE        COUNTRY          LAT     LONG SCS FAMILY
- Generic     Generic           -99    -99  Generic
+ Generic     Generic          -99      -99 Generic
 @ SCOM  SALB  SLU1  SLDR  SLRO  SLNF  SLPF  SMHB  SMPX  SMKE
    -99  0.11   6.0  0.10  89.0  1.00  1.00 IB001 IB001 IB001
 @  SLB  SLMH  SLLL  SDUL  SSAT  SRGF  SSKS  SBDM  SLOC  SLCL  SLSI  SLCF  SLNI  SLHW  SLHB  SCEC  SADC
@@ -116,7 +116,7 @@
 
 *IB00000004  IBSNAT      SIL     210 DEFAULT - DEEP SILTY LOAM
 @SITE        COUNTRY          LAT     LONG SCS FAMILY
- Generic     Generic           -99    -99  Generic
+ Generic     Generic          -99      -99 Generic
 @ SCOM  SALB  SLU1  SLDR  SLRO  SLNF  SLPF  SMHB  SMPX  SMKE
    -99  0.12   6.0  0.40  77.0  1.00  1.00 IB001 IB001 IB001
 @  SLB  SLMH  SLLL  SDUL  SSAT  SRGF  SSKS  SBDM  SLOC  SLCL  SLSI  SLCF  SLNI  SLHW  SLHB  SCEC  SADC
@@ -133,7 +133,7 @@
 
 *IB00000005  IBSNAT      SIL     150 DEFAULT - MEDIUM SILTY LOAM
 @SITE        COUNTRY          LAT     LONG SCS FAMILY
- Generic     Generic           -99    -99  Generic
+ Generic     Generic          -99      -99 Generic
 @ SCOM  SALB  SLU1  SLDR  SLRO  SLNF  SLPF  SMHB  SMPX  SMKE
    -99  0.12   6.0  0.30  79.0  1.00  1.00 IB001 IB001 IB001
 @  SLB  SLMH  SLLL  SDUL  SSAT  SRGF  SSKS  SBDM  SLOC  SLCL  SLSI  SLCF  SLNI  SLHW  SLHB  SCEC  SADC
@@ -148,7 +148,7 @@
 
 *IB00000006  IBSNAT      SIL      60 DEFAULT - SHALLOW SILTY LOAM
 @SITE        COUNTRY          LAT     LONG SCS FAMILY
- Generic     Generic           -99    -99  Generic
+ Generic     Generic          -99      -99 Generic
 @ SCOM  SALB  SLU1  SLDR  SLRO  SLNF  SLPF  SMHB  SMPX  SMKE
    -99  0.12   6.0  0.20  81.0  1.00  1.00 IB001 IB001 IB001
 @  SLB  SLMH  SLLL  SDUL  SSAT  SRGF  SSKS  SBDM  SLOC  SLCL  SLSI  SLCF  SLNI  SLHW  SLHB  SCEC  SADC
@@ -160,7 +160,7 @@
 
 *IB00000007  IBSNAT      SL      210 DEFAULT - DEEP SANDY LOAM
 @SITE        COUNTRY          LAT     LONG SCS FAMILY
- Generic     Generic           -99    -99  Generic
+ Generic     Generic          -99      -99 Generic
 @ SCOM  SALB  SLU1  SLDR  SLRO  SLNF  SLPF  SMHB  SMPX  SMKE
    -99  0.13   6.0  0.50  68.0  1.00  1.00 IB001 IB001 IB001
 @  SLB  SLMH  SLLL  SDUL  SSAT  SRGF  SSKS  SBDM  SLOC  SLCL  SLSI  SLCF  SLNI  SLHW  SLHB  SCEC  SADC
@@ -177,7 +177,7 @@
 
 *IB00000008  IBSNAT      SL      150 DEFAULT - MEDIUM SANDY LOAM
 @SITE        COUNTRY          LAT     LONG SCS FAMILY
- Generic     Generic           -99    -99  Generic
+ Generic     Generic          -99      -99 Generic
 @ SCOM  SALB  SLU1  SLDR  SLRO  SLNF  SLPF  SMHB  SMPX  SMKE
    -99  0.13   6.0  0.50  70.0  1.00  1.00 IB001 IB001 IB001
 @  SLB  SLMH  SLLL  SDUL  SSAT  SRGF  SSKS  SBDM  SLOC  SLCL  SLSI  SLCF  SLNI  SLHW  SLHB  SCEC  SADC

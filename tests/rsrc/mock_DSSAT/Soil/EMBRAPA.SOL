@@ -1,8 +1,8 @@
 *SOILS: General DSSAT Soil Input File
 
-*BPEmbrapa1  Embrapa     SL       100  1
+*BPEmbrapa1  Embrapa     SL      100 1
 @SITE        COUNTRY          LAT     LONG SCS FAMILY
- Embrapa     Brazil            -99     -99 Latossolo
+ Embrapa     Brazil           -99      -99 Latossolo
 @ SCOM  SALB  SLU1  SLDR  SLRO  SLNF  SLPF  SMHB  SMPX  SMKE
     BN   .13     6    .6    64     1    .5 IB001 IB001 IB001
 @  SLB  SLMH  SLLL  SDUL  SSAT  SRGF  SSKS  SBDM  SLOC  SLCL  SLSI  SLCF  SLNI  SLHW  SLHB  SCEC  SADC

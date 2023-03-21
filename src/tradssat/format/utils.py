@@ -2,6 +2,7 @@ import re
 
 from .exper_fmt import *
 from .wth_fmt import *
+from .mth_fmt import *
 from .cli_fmt import *
 from .sol_fmt import *
 from .geno_fmt import *
@@ -9,7 +10,7 @@ from .geno_fmt import *
 EXP_SECTION = 'EXP.DETAILS:'
 TRT_SECTION = re.compile(r'TREATMENTS(\W+[-]+FACTOR LEVELS[-]+)?')
 GENERAL_SECTION = 'GENERAL'
-SOL_INST_SECTION = re.compile(r'^[A-Za-z_0-9]{8}[A-Za-z_0-9]{0,2}')
+SOL_INST_SECTION = re.compile(r'^[A-Za-z_0-9]{8}[A-Za-z_0-9]{0,2}\s{2}')
 WEATHER_SECTION = re.compile(r'^WEATHER\s?(DATA\s)?:')
 CLIMATE_SECTION = re.compile(r'^CLIMATE\s?:(.)*')
 CULTINAR_SECTION = re.compile(r'^(.)+:(.)*')
@@ -111,6 +112,10 @@ LINE_FORMAT_SET = {
     '@DATE  S': (WTH_OTHER_LINES_V, WTH_OTHER_LINES_L),
     '@YRDAY S': (WTH_OTHER_LINES_V, WTH_OTHER_LINES_L),
 
+    # WEATHER FILEM:
+    '@ StYr': (MTH_FIRST_LINE_V, MTH_FIRST_LINE_L),
+    '@ yr mo': (MTH_OTHER_LINES_V, MTH_OTHER_LINES_L),
+
     # CLIMATE CLI FILES:
     '@ INSI      LAT     LONG  ELEV   TAV   AMP  SRAY': (CLI_FIRST_LINE_V, CLI_FIRST_LINE_L),
     '@START  D': (CLI_SECOND_LINES_V, CLI_SECOND_LINES_L),
@@ -144,6 +149,9 @@ def get_section_fmt(name):
 
         if SOL_INST_SECTION.match(name):
             return SECTION_LINE_FORMAT_SET['SLSOURCE']
+
+        if WEATHER_SECTION.match(name):
+            return SECTION_LINE_FORMAT_SET['WEATHER']
 
         if CULTINAR_SECTION.match(name):
             return SECTION_LINE_FORMAT_SET['GENOTYPE']

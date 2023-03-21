@@ -32,13 +32,13 @@ class File(object):
         with open(self.file, encoding=self.encoding) as f:
             section = []  # To store lines that go in the same section
             for line in f.readlines():
-                if line[0] in ['!', '$']:  # skip comments, some line in CUL files would start with '$' still skip.
+                if line[0] in ['!']:  # skip comments, some line in CUL files would start with '$' still skip.
                     continue
 
                 if '!' in line:
                     line = line.strip('!')[0]             # Remove the inline comments.
 
-                if line[0] == '*':  # start of section
+                if line[0] in ['*', '$']:  # start of section
 
                     # Process any previously stored block
                     if section:
@@ -149,7 +149,7 @@ class File(object):
             #        None if l.find(' ', c[1] - 1) < 0 else l.find(' ', c[1] - 1)]).strip()
             #     for c in cutoffs]
             try:
-                vals = l_reader.read(l)
+                vals = l_reader.read(l.rstrip(' \t\n'))
             except ValueError as ve:
                 raise ve
 
@@ -158,6 +158,8 @@ class File(object):
                     vl = vl.strip(' .\t\n')
 
                 elif isinstance(self._var_info.get_var(vr, sect=section_name), NumericVar):
+                    # if vr == 'DEWP':
+                    #     print(["DEBUG :: "], vl)
                     if isinstance(vl, str) and vl.strip() in ['']:
                         vl = self.get_var_code_miss(vr)
                     if vl is None:
@@ -168,12 +170,7 @@ class File(object):
                     d_vals[vr][i] = vl
                 except ValueError as err:
                     print(vals)
-                    # print(vr)
-                    # print(i)
-                    # print(vl)
-                    # print(d_vals[vr][i])
                     raise err
-                    # print(vl)
 
         l_vars = [self._var_info.get_var(vr, sect=section_name) for vr in var_names]
         l_vals = [d_vals[vr] for vr in var_names]
@@ -184,6 +181,7 @@ class File(object):
 
     def _read_section(self, section):
         section_name, section_lines = self._process_section_header(section)
+        # print("[DEBUG] :: ", section_name, section_lines)
 
         subblock = []
         for line in section_lines:  # skip first line (with "*")
